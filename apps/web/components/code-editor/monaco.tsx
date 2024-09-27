@@ -14,7 +14,7 @@ const Monaco = ({ problemId }: { problemId: string }) => {
 
   const [run, setRun] = useRecoilState(runCode);
   const lang = useRecoilValue(language);
-  const setOutput = useSetRecoilState(output)
+  const setOutput = useSetRecoilState(output);
 
   useEffect(() => {
     if (run === true) {
@@ -22,6 +22,7 @@ const Monaco = ({ problemId }: { problemId: string }) => {
       console.log(code);
       setRun(false);
 
+      let solutionId: string;
       axios
         .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/compile/run`, {
           problemId,
@@ -29,12 +30,30 @@ const Monaco = ({ problemId }: { problemId: string }) => {
           lang,
         })
         .then(function (response) {
-          setOutput(response.data);
-          console.log(response.data)
+          solutionId = response.data;
         })
         .catch(function (error) {
           console.log(error);
         });
+
+      let interval = setInterval(async () => {
+        const solutionStatus = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/compile/check`,
+          {
+            solutionId,
+          }
+        );
+        console.log(solutionStatus.data)
+        if(solutionStatus.data.status === "SUCCESS"){
+          setOutput(solutionStatus.data.output);
+          clearInterval(interval);
+        }
+        if(solutionStatus.data.status === "ERROR"){
+          setOutput(solutionStatus.data.output);
+          console.log(solutionStatus.data.output);
+          clearInterval(interval);
+        }
+      }, 700);
     }
   }, [run]);
 

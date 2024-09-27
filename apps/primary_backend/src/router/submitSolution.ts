@@ -27,13 +27,23 @@ router.post("/run", async (req: Request, res: Response) => {
     })
     addJobToQueue(submitSol.id);
 
-    return res.send("done");
+    return res.send(submitSol.id);
   } catch(err) {
-    console.log(err)
     res.json(err);
   }
 });
 
 router.post("/submit", (req: Request, res: Response) => {});
+
+router.post("/check", async(req: Request, res: Response) =>{
+  const solutionId = req.body.solutionId;
+
+  const solution = await db.runSubmission.findFirst({
+    where: {
+      id: solutionId,
+    }
+  })
+  res.json(solution);
+})
 
 export default router;

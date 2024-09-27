@@ -21,6 +21,7 @@ const worker = new Worker(
 
       const filepath = await generateFile(sol.language, sol.filepath);
       const output = await executeCpp(filepath);
+      console.log(output);
 
       const executedCode = await db.runSubmission.update({
         where: {
@@ -48,13 +49,14 @@ const worker = new Worker(
 
       return executedCode;
     } catch (err) {
-      console.log(err);
+      const error = (JSON.stringify(err));
       await db.runSubmission.update({
         where: {
           id: job.data.id,
         },
         data: {
           status: "ERROR",
+          output: error,
           completedAt: new Date(Date.now()),
         },
       });
