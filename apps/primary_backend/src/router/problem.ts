@@ -18,8 +18,8 @@ router.post("/post", async(req: Request, res: Response) =>{
     res.send(problem);
 })
 
-router.get("/", (req, res) => {
-    res.send("hello");
+router.post("/runCode", (req: Request, res: Response) => {
+    
 })
 
 export default router;

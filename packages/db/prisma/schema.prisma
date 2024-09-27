@@ -13,6 +13,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Status {
+  SUCCESS
+  PENDING
+  ERROR
+}
+
 model profile {
   id       String @id @default(uuid())
   name     String
@@ -34,4 +40,16 @@ model problem {
 
   runTestCases    Int[]
   submitTestCases Int[]
+}
+
+model runSubmission {
+  id       String @id @default(uuid())
+  language String
+  filepath String
+  status   Status @default(PENDING)
+  output   String
+
+  submittedAt DateTime @default(now())
+  startedAt   DateTime
+  completedAt DateTime
 }
