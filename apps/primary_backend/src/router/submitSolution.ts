@@ -17,11 +17,17 @@ router.post("/run", async (req: Request, res: Response) => {
 
 
   try{
-    const filepath = await generateFile(lang, code);
-    const output = await executeCpp(filepath)
-    addJobToQueue("helllpooo");
-    
-    return res.send(output);
+    // const filepath = await generateFile(lang, code);
+    const submitSol = await db.runSubmission.create({
+      data: {
+        language: lang,
+        filepath: code,
+        output: "",
+      }
+    })
+    addJobToQueue(submitSol.id);
+
+    return res.send("done");
   } catch(err) {
     console.log(err)
     res.json(err);

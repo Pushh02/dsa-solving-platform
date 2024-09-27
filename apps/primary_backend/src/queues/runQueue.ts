@@ -10,7 +10,7 @@ const addJobToQueue = async (jobId: string) => {
 };
 
 worker.on("completed", (job) =>{
-  console.log("first")
+  console.log(job.data, "added");
 });
 
 export { addJobToQueue };

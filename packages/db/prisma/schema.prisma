@@ -50,6 +50,6 @@ model runSubmission {
   output   String
 
   submittedAt DateTime @default(now())
-  startedAt   DateTime
-  completedAt DateTime
+  startedAt   DateTime?
+  completedAt DateTime?
 }

@@ -1,6 +1,7 @@
 import { exec } from "child_process"
 import * as fs from "fs"
 import path from "path"
+import { generateFile } from "./generateFile";
 
 const outputPath = path.join(__dirname, "outputs");
 
@@ -8,7 +9,7 @@ if (!fs.existsSync(outputPath)) {
   fs.mkdirSync(outputPath, { recursive: true });
 }
 
-const executeCpp = (filepath:string) => {
+const executeCpp = (filepath:string): Promise<{ stdout: string, outPath: string }> => {
   const jobId = path.basename(filepath).split(".")[0];
   const outPath = path.join(outputPath, `${jobId}.exe`);
 
@@ -18,7 +19,7 @@ const executeCpp = (filepath:string) => {
       (error, stdout, stderr) => {
         error && reject({ error, stderr });
         stderr && reject(stderr);
-        resolve(stdout);
+        resolve({stdout, outPath});
       }
     );
   });
