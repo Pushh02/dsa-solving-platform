@@ -15,7 +15,7 @@ export default async function Home() {
         <Navbar />
         <div className="mt-2 flex items-center justify-center gap-x-2">
           <ProblemBox />
-          <SolutionBox problemId="lorem" />
+          <SolutionBox />
         </div>
       </div>
     </RecoilRoot>

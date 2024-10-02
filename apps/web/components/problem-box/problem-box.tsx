@@ -1,15 +1,49 @@
 "use client";
 
+import { problemId } from "@repo/store/submission";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useSetRecoilState } from "recoil";
+
+type problem = {
+  id: String,
+  title: String,
+  description: String,
+  example: JSON,
+  constraints: String[],
+  followUpQuestion?: String,
+  dryRunTestCases: JSON
+}
+
 const ProblemBox = () => {
+  const [problem, setproblem] = useState<problem>();
+  const setProblemId = useSetRecoilState(problemId);
+  const router = useRouter();
+  useEffect(()=>{
+    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/problem`, {
+      //@ts-ignore
+      title: "1. 2Sum"
+    }).then((problem)=>{
+      return problem.data;
+    }).then((data)=>{
+      setProblemId(data.id)
+      setproblem(data)
+    }).catch((err)=>{
+      router.replace("/");
+      console.log(err)
+    })
+  }, [])
+
+  // if(!problem)
+  //   router.replace("/");
+      
   return (
     <div className="h-[89vh] w-[47vw] border-[1px] rounded-lg border-slate-400 p-4 overflow-auto">
-      <h1 className="text-3xl font-semibold">1. 2Sum</h1>
+      <h1 className="text-3xl font-semibold">{problem?.title}</h1>
       <div className="text-[#d1d1d1] text-md mt-2">
         <p className="leading-9">
-          Given an array of integers nums and an integer target, return indices
-          of the two numbers such that they add up to target. You may assume
-          that each input would have exactly one solution, and you may not use
-          the same element twice. You can return the answer in any order.
+          {problem?.description}
         </p>
         <p>
           Example 1: <br /> <br />

@@ -19,7 +19,7 @@ enum Status {
   ERROR
 }
 
-model profile {
+model Profile {
   id       String @id @default(uuid())
   name     String
   username String
@@ -30,26 +30,30 @@ model profile {
   updatedAt DateTime @updatedAt
 }
 
-model problem {
-  id               String @id @default(uuid())
+model Problem {
+  id               String   @id @default(uuid())
   title            String
   description      String
-  examples         Json
-  constraints      String
-  followUpQuestion String
+  examples         Json[]
+  constraints      String[]
+  followUpQuestion String?
+  
+  mainFunction     String
 
-  runTestCases    Int[]
-  submitTestCases Int[]
+  dryRunTestCases Json[]
+  // submitTestCases Int[]
 }
 
-model runSubmission {
+model RunSubmission {
   id       String @id @default(uuid())
   language String
   filepath String
   status   Status @default(PENDING)
   output   String
 
-  submittedAt DateTime @default(now())
+  problemId String
+
+  submittedAt DateTime  @default(now())
   startedAt   DateTime?
   completedAt DateTime?
 }

@@ -3,23 +3,40 @@ import { db } from "../db";
 
 const router = Router();
 
-router.post("/post", async(req: Request, res: Response) =>{
-    const problem = await db.problem.create({
-        data: {
-            title: req.body.title,
-            description: req.body.description,
-            examples: req.body.examples,
-            constraints: req.body.constraints,
-            followUpQuestion: req.body.followUpQuestion,
-            runTestCases: req.body.runTestCases,
-            submitTestCases: req.body.submitTestCases,
-        }
-    });
-    res.send(problem);
+router.get("/", async(req: Request, res: Response) =>{
+    try{
+        const title = req.body.title;
+        const problem = await db.problem.findFirst({
+            where: {
+                title,
+            }
+        });
+        res.send(problem);
+    } catch (err){
+        res.send(err);
+    }
 })
 
-router.post("/runCode", (req: Request, res: Response) => {
-    
-})
+router.post("/post", async (req: Request, res: Response) => {
+  try {
+    const problem = await db.problem.create({
+      data: {
+        title: req.body.title,
+        description: req.body.description,
+        examples: req.body.examples,
+        constraints: req.body.constraints,
+        followUpQuestion: req.body.followUpQuestion,
+        mainFunction: req.body.mainFunction,
+        dryRunTestCases: req.body.dryRunTestCases,
+        // submitTestCases: req.body.submitTestCases,
+      },
+    });
+    res.send(problem);
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+});
+
 
 export default router;

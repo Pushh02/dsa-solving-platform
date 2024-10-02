@@ -14,3 +14,8 @@ export const output = atom({
   key: "output",
   default: "",
 });
+
+export const problemId = atom({
+  key: "problemId",
+  default: "",
+});

@@ -1,14 +1,12 @@
 import { Request, Response, Router } from "express";
 
 import { db } from "../db";
-import { generateFile } from "../lib/generateFile";
-import { executeCpp } from "../lib/executeCpp";
 import { addJobToQueue } from "../queues/runQueue";
 
 const router = Router();
 
 router.post("/run", async (req: Request, res: Response) => {
-  const { lang, code } = req.body;
+  const { lang, code, problemId } = req.body;
 
   if (code === undefined || lang === undefined)
     return res
@@ -17,9 +15,9 @@ router.post("/run", async (req: Request, res: Response) => {
 
 
   try{
-    // const filepath = await generateFile(lang, code);
     const submitSol = await db.runSubmission.create({
       data: {
+        problemId,
         language: lang,
         filepath: code,
         output: "",
@@ -40,7 +38,7 @@ router.post("/check", async(req: Request, res: Response) =>{
 
   const solution = await db.runSubmission.findFirst({
     where: {
-      id: solutionId,
+      id: solutionId
     }
   })
   res.json(solution);

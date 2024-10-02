@@ -1,12 +1,12 @@
 "use client";
 
 import Editor from "@monaco-editor/react";
-import { language, output, runCode } from "@repo/store/submission";
+import { language, output, problemId, runCode } from "@repo/store/submission";
 import axios from "axios";
 import { useEffect, useRef } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
-const Monaco = ({ problemId }: { problemId: string }) => {
+const Monaco = () => {
   const defaultValue = `int twoSum(vector<int>& nums, int target){
     
 }`;
@@ -15,6 +15,8 @@ const Monaco = ({ problemId }: { problemId: string }) => {
   const [run, setRun] = useRecoilState(runCode);
   const lang = useRecoilValue(language);
   const setOutput = useSetRecoilState(output);
+  const probId = useRecoilValue(problemId)
+  console.log(probId)
 
   useEffect(() => {
     if (run === true) {
@@ -25,7 +27,7 @@ const Monaco = ({ problemId }: { problemId: string }) => {
       let solutionId: string;
       axios
         .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/compile/run`, {
-          problemId,
+          problemId: probId,
           code,
           lang,
         })
@@ -35,15 +37,14 @@ const Monaco = ({ problemId }: { problemId: string }) => {
         .catch(function (error) {
           console.log(error);
         });
-
-      let interval = setInterval(async () => {
+        
+        let interval = setInterval(async () => {
+        console.log(solutionId);
         const solutionStatus = await axios.post(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/compile/check`,
-          {
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/compile/check`,{
             solutionId,
           }
         );
-        console.log(solutionStatus.data)
         if(solutionStatus.data.status === "SUCCESS"){
           setOutput(solutionStatus.data.output);
           clearInterval(interval);
