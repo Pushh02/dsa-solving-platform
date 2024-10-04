@@ -27,15 +27,15 @@ const worker = new Worker(
       if (!sol) return JSON.stringify({ error: "no solution found" });
       if (!problemDetails)
         return JSON.stringify({ error: "no solution found" });
-
+      
       //mapping the testcases object to run all the testcases on the code
       const testCases = problemDetails.dryRunTestCases;
       let outputArray: string[] = [];
 
       try {
-        //@ts-ignore
-        await Promise.all(testCases.map(async (testCase) => {
-          try {
+        await Promise.all(
+          //@ts-ignore
+          testCases.map(async (testCase) => {
             const filepath = await generateFile(
               sol.language,
               sol.filepath,
@@ -43,52 +43,61 @@ const worker = new Worker(
               testCase.testCase.inputs
             );
             const output = await executeCpp(filepath);
-            console.log(typeof(output.stdout), " ", typeof(testCase.testCase.output));
+
             if (output.stdout == testCase.testCase.output) {
               outputArray.push("true");
             } else {
               outputArray.push("false");
             }
-            console.log(outputArray)
-      
-            await Promise.all([
-              fs.promises.unlink(filepath),
-              fs.promises.unlink(output.outPath)
-            ]);
-          } catch (err) {
-            console.error('Error processing test case:', err);
-            outputArray.push("false");
-          }
-        }));
-      } catch (err) {
-        console.error('Error in test case processing:', err);
-      }
 
-      //Updating the completedAt field to track the time of execution
-      const executedCode = await db.runSubmission.update({
-        where: {
-          id: job.data.id,
-        },
-        data: {
-          output: outputArray[0],
-          status: "SUCCESS",
-          completedAt: new Date(Date.now()),
-        },
-      });
+            await fs.promises.unlink(filepath),
+            await fs.promises.unlink(output.outPath);
+          })
+        );
 
-      return executedCode;
-    } catch (err) {
+        //Updating the completedAt field to track the time of execution
+        const op = outputArray.includes("false") ? "false" : "true";
+        console.log(op);
+
+        const executedCode = await db.runSubmission.update({
+          where: {
+            id: job.data.id,
+          },
+          data: {
+            output: op,
+            status: "SUCCESS",
+            completedAt: new Date(Date.now()),
+          },
+        });
+
+        return executedCode;
+
+      } catch (err: any) {
       const error = JSON.stringify(err);
+        await db.runSubmission.update({
+          where: {
+            id: job.data.id,
+          },
+          data: {
+            status: "ERROR",
+            output: error,
+            completedAt: new Date(Date.now()),
+          },
+        });
+        console.error("Error in test case processing:", err);
+      }
+    } catch (err) {
       await db.runSubmission.update({
         where: {
           id: job.data.id,
         },
         data: {
           status: "ERROR",
-          output: error,
+          output: "internal error",
           completedAt: new Date(Date.now()),
         },
       });
+      console.log(err);
     }
   },
   {

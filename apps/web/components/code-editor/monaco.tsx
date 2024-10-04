@@ -7,7 +7,7 @@ import { useEffect, useRef } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 const Monaco = () => {
-  const defaultValue = `int twoSum(vector<int>& nums, int target){
+  const defaultValue = `vector<int> twoSum(vector<int>& nums, int target){
     
 }`;
   const editorRef = useRef(null);
@@ -15,14 +15,14 @@ const Monaco = () => {
   const [run, setRun] = useRecoilState(runCode);
   const lang = useRecoilValue(language);
   const setOutput = useSetRecoilState(output);
-  const probId = useRecoilValue(problemId)
-  console.log(probId)
+  const probId = useRecoilValue(problemId);
 
   useEffect(() => {
     if (run === true) {
       const code = showValue();
       console.log(code);
       setRun(false);
+      setOutput("PENDING");
 
       let solutionId: string;
       axios
@@ -37,19 +37,19 @@ const Monaco = () => {
         .catch(function (error) {
           console.log(error);
         });
-        
-        let interval = setInterval(async () => {
-        console.log(solutionId);
+
+      let interval = setInterval(async () => {
         const solutionStatus = await axios.post(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/compile/check`,{
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/compile/check`,
+          {
             solutionId,
           }
         );
-        if(solutionStatus.data.status === "SUCCESS"){
+        if (solutionStatus.data.status === "SUCCESS") {
           setOutput(solutionStatus.data.output);
           clearInterval(interval);
         }
-        if(solutionStatus.data.status === "ERROR"){
+        if (solutionStatus.data.status === "ERROR") {
           setOutput(solutionStatus.data.output);
           console.log(solutionStatus.data.output);
           clearInterval(interval);
