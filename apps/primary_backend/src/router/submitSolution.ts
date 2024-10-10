@@ -20,7 +20,7 @@ router.post("/run", async (req: Request, res: Response) => {
         problemId,
         language: lang,
         filepath: code,
-        output: "",
+        output: [],
       }
     })
     addJobToQueue(submitSol.id);

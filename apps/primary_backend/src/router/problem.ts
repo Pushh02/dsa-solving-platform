@@ -5,10 +5,10 @@ const router = Router();
 
 router.get("/", async(req: Request, res: Response) =>{
     try{
-        const title = req.body.title;
+        const title = req.query.title;
         const problem = await db.problem.findFirst({
             where: {
-                title,
+                title: title as string,
             }
         });
         res.send(problem);

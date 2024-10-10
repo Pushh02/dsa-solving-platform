@@ -17,6 +17,7 @@ enum Status {
   SUCCESS
   PENDING
   ERROR
+  WRONG
 }
 
 model Profile {
@@ -49,7 +50,7 @@ model RunSubmission {
   language String
   filepath String
   status   Status @default(PENDING)
-  output   String
+  output   String[]
 
   problemId String
 

@@ -20,10 +20,13 @@ const ProblemBox = () => {
   const [problem, setproblem] = useState<problem>();
   const setProblemId = useSetRecoilState(problemId);
   const router = useRouter();
+  
   useEffect(()=>{
     axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/problem`, {
-      //@ts-ignore
-      title: "1. 2Sum"
+      headers: {
+        "Content-Type": "application/json"
+      },
+      params: { title: "1. 2Sum" }
     }).then((problem)=>{
       return problem.data;
     }).then((data)=>{

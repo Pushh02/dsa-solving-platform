@@ -24,13 +24,12 @@ const worker = new Worker(
           id: sol.problemId,
         },
       });
-      if (!sol) return JSON.stringify({ error: "no solution found" });
-      if (!problemDetails)
-        return JSON.stringify({ error: "no solution found" });
-      
+      if (!sol || !problemDetails) return JSON.stringify({ error: "no solution found" });
+
       //mapping the testcases object to run all the testcases on the code
-      const testCases = problemDetails.dryRunTestCases;
-      let outputArray: string[] = [];
+      const testCases = problemDetails.dryRunTestCases as unknown;
+      let outputArray: any[] = [];
+      let outputStatus = true;
 
       try {
         await Promise.all(
@@ -43,44 +42,58 @@ const worker = new Worker(
               testCase.testCase.inputs
             );
             const output = await executeCpp(filepath);
+            outputArray.push(`${output.stdout}`);
 
-            if (output.stdout == testCase.testCase.output) {
-              outputArray.push("true");
-            } else {
-              outputArray.push("false");
+            if (output.stdout != testCase.testCase.output) {
+              outputStatus = false;
             }
 
-            await fs.promises.unlink(filepath),
-            await fs.promises.unlink(output.outPath);
+            await fs.promises.unlink(filepath);
+            if (output.outPath) {
+              await fs.promises.unlink(output.outPath);
+            }
           })
         );
 
-        //Updating the completedAt field to track the time of execution
-        const op = outputArray.includes("false") ? "false" : "true";
-        console.log(op);
+        //Updating the output the completedAt field to track the time took for execution
 
-        const executedCode = await db.runSubmission.update({
-          where: {
-            id: job.data.id,
-          },
-          data: {
-            output: op,
-            status: "SUCCESS",
-            completedAt: new Date(Date.now()),
-          },
-        });
+        if(outputStatus){
+          const executedCode = await db.runSubmission.update({
+            where: {
+              id: job.data.id,
+            },
+            data: {
+              output: outputArray,
+              status: "SUCCESS",
+              completedAt: new Date(Date.now()),
+            },
+          });
 
-        return executedCode;
+          return executedCode;
+        } else {
+          const executedCode = await db.runSubmission.update({
+            where: {
+              id: job.data.id,
+            },
+            data: {
+              output: outputArray,
+              status: "WRONG",
+              completedAt: new Date(Date.now()),
+            },
+          });
+
+          return executedCode;
+        }
 
       } catch (err: any) {
-      const error = JSON.stringify(err);
+        const error = JSON.stringify(err);
         await db.runSubmission.update({
           where: {
             id: job.data.id,
           },
           data: {
             status: "ERROR",
-            output: error,
+            output: [error],
             completedAt: new Date(Date.now()),
           },
         });
@@ -93,7 +106,7 @@ const worker = new Worker(
         },
         data: {
           status: "ERROR",
-          output: "internal error",
+          output: ["internal error"],
           completedAt: new Date(Date.now()),
         },
       });

@@ -20,7 +20,6 @@ const Monaco = () => {
   useEffect(() => {
     if (run === true) {
       const code = showValue();
-      console.log(code);
       setRun(false);
       setOutput("PENDING");
 
@@ -49,9 +48,12 @@ const Monaco = () => {
           setOutput(solutionStatus.data.output);
           clearInterval(interval);
         }
-        if (solutionStatus.data.status === "ERROR") {
+        else if (solutionStatus.data.status === "ERROR") {
           setOutput(solutionStatus.data.output);
-          console.log(solutionStatus.data.output);
+          clearInterval(interval);
+        }
+        else if(solutionStatus.data.status === "WRONG"){
+          setOutput(solutionStatus.data.output);
           clearInterval(interval);
         }
       }, 700);
