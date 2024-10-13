@@ -6,7 +6,7 @@ import { addJobToQueue } from "../queues/runQueue";
 const router = Router();
 
 router.post("/run", async (req: Request, res: Response) => {
-  const { lang, code, problemId } = req.body;
+  const { lang, code, problemId, profileId } = req.body;
 
   if (code === undefined || lang === undefined)
     return res
@@ -21,6 +21,7 @@ router.post("/run", async (req: Request, res: Response) => {
         language: lang,
         filepath: code,
         output: [],
+        profileId,
       }
     })
     addJobToQueue(submitSol.id);
@@ -38,7 +39,10 @@ router.post("/check", async(req: Request, res: Response) =>{
 
   const solution = await db.runSubmission.findFirst({
     where: {
-      id: solutionId
+      id: solutionId,
+    },
+    include: {
+      problem: true
     }
   })
   res.json(solution);

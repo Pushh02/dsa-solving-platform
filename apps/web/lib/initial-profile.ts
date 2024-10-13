@@ -26,7 +26,7 @@ export const initialProfile = async () => {
   const newProfile = await db.profile.create({
     data: {
       id: user.id,
-      username: user.username || `${user.firstName}${getRandomInt(10000)}`,
+      username: user.username || `${user.firstName}${getRandomInt(1000000)}`,
       name: `${user.firstName} ${user.lastName}`,
       imageURL: user.imageUrl,
       //@ts-ignore

@@ -1,5 +1,6 @@
 "use client";
 
+import { useUser } from "@clerk/nextjs";
 import Editor from "@monaco-editor/react";
 import { language, output, problemId, runCode } from "@repo/store/submission";
 import axios from "axios";
@@ -17,46 +18,58 @@ const Monaco = () => {
   const setOutput = useSetRecoilState(output);
   const probId = useRecoilValue(problemId);
 
+  const { isSignedIn, user, isLoaded } = useUser();
+
   useEffect(() => {
-    if (run === true) {
-      const code = showValue();
-      setRun(false);
-      setOutput("PENDING");
+    if (isSignedIn) {
+      if (run === true) {
+        if (user === null) return;
 
-      let solutionId: string;
-      axios
-        .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/compile/run`, {
-          problemId: probId,
-          code,
-          lang,
-        })
-        .then(function (response) {
-          solutionId = response.data;
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+        const code = showValue();
+        setRun(false);
+        setOutput("PENDING");
 
-      let interval = setInterval(async () => {
-        const solutionStatus = await axios.post(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/compile/check`,
-          {
-            solutionId,
+        let solutionId: string;
+        axios
+          .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/compile/run`, {
+            problemId: probId,
+            code,
+            lang,
+            profileId: user.id,
+          })
+          .then(function (response) {
+            solutionId = response.data;
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+
+        let interval = setInterval(async () => {
+          const solutionStatus = await axios.post(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/compile/check`,
+            {
+              solutionId,
+            }
+          );
+          if (solutionStatus.data.status === "SUCCESS") {
+            console.log(solutionStatus.data.problem)
+            setOutput([
+              {
+                expectedOutput: solutionStatus.data.problem.dryRunTestCases,
+                output: solutionStatus.data.output,
+                status: solutionStatus.data.status
+              }
+            ]);
+            clearInterval(interval);
+          } else if (solutionStatus.data.status === "ERROR") {
+            setOutput(solutionStatus.data.output);
+            clearInterval(interval);
+          } else if (solutionStatus.data.status === "WRONG") {
+            setOutput(solutionStatus.data.output);
+            clearInterval(interval);
           }
-        );
-        if (solutionStatus.data.status === "SUCCESS") {
-          setOutput(solutionStatus.data.output);
-          clearInterval(interval);
-        }
-        else if (solutionStatus.data.status === "ERROR") {
-          setOutput(solutionStatus.data.output);
-          clearInterval(interval);
-        }
-        else if(solutionStatus.data.status === "WRONG"){
-          setOutput(solutionStatus.data.output);
-          clearInterval(interval);
-        }
-      }, 700);
+        }, 700);
+      }
     }
   }, [run]);
 

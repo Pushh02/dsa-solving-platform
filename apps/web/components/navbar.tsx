@@ -7,7 +7,7 @@ const Navbar = () => {
   const [run, setRun] = useRecoilState(runCode);
   return (
     <nav className="flex text-white w-screen h-[9vh] bg-[#222222] px-2 items-center justify-between">
-      <p className="text-2xl">LOGO</p>
+      <p className="text-3xl ml-4">CG</p>
 
       <div className="flex items-center justify-around w-fit h-fit border-gray-500 rounded-lg border-2">
         <div

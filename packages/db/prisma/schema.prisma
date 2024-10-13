@@ -27,6 +27,8 @@ model Profile {
   imageURL String @db.Text
   email    String @db.Text
 
+  runSubmissions RunSubmission[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -38,9 +40,10 @@ model Problem {
   examples         Json[]
   constraints      String[]
   followUpQuestion String?
+
+  runSubmissions   RunSubmission[]
   
   mainFunction     String
-
   dryRunTestCases Json[]
   // submitTestCases Int[]
 }
@@ -51,7 +54,11 @@ model RunSubmission {
   filepath String
   status   Status @default(PENDING)
   output   String[]
-
+  
+  profile    Profile  @relation(fields: [profileId], references: [id])
+  profileId  String
+  
+  problem    Problem  @relation(fields: [problemId], references: [id])
   problemId String
 
   submittedAt DateTime  @default(now())

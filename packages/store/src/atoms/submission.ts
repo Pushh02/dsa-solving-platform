@@ -1,5 +1,11 @@
 import { atom } from "recoil";
 
+interface outputInterface {
+  expectedOutput: JSON[],
+  output: string,
+  status: "SUCCESS" | "ERROR" | "WRONG";
+}
+
 export const runCode = atom({
   key: "runCode",
   default: false,
@@ -12,7 +18,7 @@ export const language = atom({
 
 export const output = atom({
   key: "output",
-  default: "",
+  default: "" as string | outputInterface[],
 });
 
 export const problemId = atom({
