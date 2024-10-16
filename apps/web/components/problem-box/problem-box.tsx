@@ -1,6 +1,6 @@
 "use client";
 
-import { problemId } from "@repo/store/submission";
+import { currentProblem } from "@repo/store/submission";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -17,8 +17,8 @@ type problem = {
 }
 
 const ProblemBox = () => {
-  const [problem, setproblem] = useState<problem>();
-  const setProblemId = useSetRecoilState(problemId);
+  const [problemData, setproblemData] = useState<problem>();
+  const setProblem = useSetRecoilState(currentProblem);
   const router = useRouter();
   
   useEffect(()=>{
@@ -30,8 +30,8 @@ const ProblemBox = () => {
     }).then((problem)=>{
       return problem.data;
     }).then((data)=>{
-      setProblemId(data.id)
-      setproblem(data)
+      setProblem(data)
+      setproblemData(data)
     }).catch((err)=>{
       router.replace("/");
       console.log(err)
@@ -43,10 +43,10 @@ const ProblemBox = () => {
       
   return (
     <div className="h-[89vh] w-[47vw] border-[1px] rounded-lg border-slate-400 p-4 overflow-auto">
-      <h1 className="text-3xl font-semibold">{problem?.title}</h1>
+      <h1 className="text-3xl font-semibold">{problemData?.title}</h1>
       <div className="text-[#d1d1d1] text-md mt-2">
         <p className="leading-9">
-          {problem?.description}
+          {problemData?.description}
         </p>
         <p>
           Example 1: <br /> <br />

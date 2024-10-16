@@ -32,31 +32,30 @@ const worker = new Worker(
       let outputStatus = true;
 
       try {
-        await Promise.all(
-          //@ts-ignore
-          testCases.map(async (testCase) => {
+        //@ts-ignore
+        for (const testCase of testCases) {
             const filepath = await generateFile(
               sol.language,
               sol.filepath,
               problemDetails.mainFunction,
               testCase.testCase.inputs
             );
+        
             const output = await executeCpp(filepath);
             outputArray.push(`${output.stdout}`);
-
+        
             if (output.stdout != testCase.testCase.output) {
               outputStatus = false;
             }
-
+        
             await fs.promises.unlink(filepath);
             if (output.outPath) {
               await fs.promises.unlink(output.outPath);
             }
-          })
-        );
+        }
 
         //Updating the output the completedAt field to track the time took for execution
-
+        console.log(outputArray)
         if(outputStatus){
           const executedCode = await db.runSubmission.update({
             where: {

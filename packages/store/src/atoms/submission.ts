@@ -1,8 +1,15 @@
+import { ProblemSchema } from "@repo/db/types";
 import { atom } from "recoil";
 
-interface outputInterface {
-  expectedOutput: JSON[],
-  output: string,
+interface TestCase {
+  testCase: {
+    inputs: string[];
+    output: string;
+  };
+}
+
+interface OutputInterface {
+  output: string[];
   status: "SUCCESS" | "ERROR" | "WRONG";
 }
 
@@ -18,10 +25,10 @@ export const language = atom({
 
 export const output = atom({
   key: "output",
-  default: "" as string | outputInterface[],
+  default: "" as string | string[],
 });
 
-export const problemId = atom({
-  key: "problemId",
-  default: "",
+export const currentProblem = atom({
+  key: "currentProblem",
+  default: {} as ProblemSchema,
 });

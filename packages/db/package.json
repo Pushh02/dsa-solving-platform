@@ -8,12 +8,12 @@
   },
   "exports": {
     "./client": "./src/index.ts",
-    "./types": "./types.ts"
+    "./types": "./src/types.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^5.19.1"
+    "@prisma/client": "^5.20.0"
   }
 }

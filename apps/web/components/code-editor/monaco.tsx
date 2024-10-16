@@ -2,7 +2,12 @@
 
 import { useUser } from "@clerk/nextjs";
 import Editor from "@monaco-editor/react";
-import { language, output, problemId, runCode } from "@repo/store/submission";
+import {
+  language,
+  output,
+  currentProblem,
+  runCode,
+} from "@repo/store/submission";
 import axios from "axios";
 import { useEffect, useRef } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -16,9 +21,9 @@ const Monaco = () => {
   const [run, setRun] = useRecoilState(runCode);
   const lang = useRecoilValue(language);
   const setOutput = useSetRecoilState(output);
-  const probId = useRecoilValue(problemId);
+  const prob = useRecoilValue(currentProblem);
 
-  const { isSignedIn, user, isLoaded } = useUser();
+  const { isSignedIn, user } = useUser();
 
   useEffect(() => {
     if (isSignedIn) {
@@ -32,7 +37,7 @@ const Monaco = () => {
         let solutionId: string;
         axios
           .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/compile/run`, {
-            problemId: probId,
+            problemId: prob.id,
             code,
             lang,
             profileId: user.id,
@@ -52,14 +57,7 @@ const Monaco = () => {
             }
           );
           if (solutionStatus.data.status === "SUCCESS") {
-            console.log(solutionStatus.data.problem)
-            setOutput([
-              {
-                expectedOutput: solutionStatus.data.problem.dryRunTestCases,
-                output: solutionStatus.data.output,
-                status: solutionStatus.data.status
-              }
-            ]);
+            setOutput(solutionStatus.data.output);
             clearInterval(interval);
           } else if (solutionStatus.data.status === "ERROR") {
             setOutput(solutionStatus.data.output);
