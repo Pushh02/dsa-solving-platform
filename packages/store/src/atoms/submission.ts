@@ -25,7 +25,7 @@ export const language = atom({
 
 export const output = atom({
   key: "output",
-  default: "" as string | string[],
+  default: "" as string | OutputInterface,
 });
 
 export const currentProblem = atom({

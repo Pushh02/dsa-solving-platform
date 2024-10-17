@@ -57,13 +57,13 @@ const Monaco = () => {
             }
           );
           if (solutionStatus.data.status === "SUCCESS") {
-            setOutput(solutionStatus.data.output);
+            setOutput({output: solutionStatus.data.output, status: "SUCCESS"});
             clearInterval(interval);
           } else if (solutionStatus.data.status === "ERROR") {
             setOutput(solutionStatus.data.output);
             clearInterval(interval);
           } else if (solutionStatus.data.status === "WRONG") {
-            setOutput(solutionStatus.data.output);
+            setOutput({output: solutionStatus.data.output, status: "WRONG"});
             clearInterval(interval);
           }
         }, 700);

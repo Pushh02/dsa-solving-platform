@@ -24,7 +24,6 @@ const OutputBox = () => {
   }, [outputVal]);
 
   useEffect(() => {
-    // Set the first test case as selected when the problem loads or changes
     if (
       problem &&
       problem.dryRunTestCases &&
@@ -32,19 +31,19 @@ const OutputBox = () => {
     ) {
       const firstTestCase = problem.dryRunTestCases[0];
       if (firstTestCase) {
-        if (outputVal) {
-          setSelectedTestCase({
-            inputs: firstTestCase.testCase.inputs,
-            expectedOutput: firstTestCase.testCase.output,
-            output: outputVal[0],
-          });
-        } else {
-          setSelectedTestCase({
-            inputs: firstTestCase.testCase.inputs,
-            expectedOutput: firstTestCase.testCase.output,
-            output: undefined,
-          });
+        let outputForTestCase: string | undefined;
+
+        if (typeof outputVal === "object" && "output" in outputVal) {
+          outputForTestCase = outputVal.output[0];
+        } else if (typeof outputVal === "string") {
+          outputForTestCase = outputVal;
         }
+
+        setSelectedTestCase({
+          inputs: firstTestCase.testCase.inputs,
+          expectedOutput: firstTestCase.testCase.output,
+          output: outputForTestCase,
+        });
       }
     }
   }, [problem, outputVal]);
@@ -52,55 +51,65 @@ const OutputBox = () => {
   const showInputsAndOutput = (
     inputs: string[],
     expectedOutput: string,
-    output: string | undefined
+    index: number
   ) => {
+    let output: string | undefined;
+
+    if (typeof outputVal === "object" && "output" in outputVal) {
+      output = outputVal.output[index];
+    } else if (typeof outputVal === "string") {
+      output = index === 0 ? outputVal : undefined;
+    }
+
     setSelectedTestCase({ inputs, expectedOutput, output });
   };
+  console.log(outputVal);
   return (
     <>
       <h2 className="text-xl font-semibold m-2">Output:</h2>
+      <p
+        className={cn(
+          "text-md ml-2 mb-2 font-semibold",
+          typeof outputVal === "object" && outputVal.status === "SUCCESS"
+            ? "text-emerald-400"
+            : "text-rose-400"
+        )}
+      >
+        {typeof outputVal === "object" && outputVal.status}
+      </p>
       <div className="flex ml-2 gap-x-2 mb-2">
         {problem &&
         problem.dryRunTestCases &&
         problem.dryRunTestCases.length > 0 ? (
-          problem.dryRunTestCases.map((testCase, index) => {
-            return (
-              <div
-                key={index}
-                onClick={() =>
-                  showInputsAndOutput(
-                    testCase.testCase.inputs,
-                    testCase.testCase.output,
-                    outputVal[index]
-                  )
-                }
-                className="h-7 w-20 rounded-lg bg-zinc-600 cursor-pointer"
-              >
-                <p className="flex items-center justify-center h-full">
-                  Case {index + 1}
-                </p>
-              </div>
-            );
-          })
+          problem.dryRunTestCases.map((testCase, index) => (
+            <div
+              key={index}
+              onClick={() =>
+                showInputsAndOutput(
+                  testCase.testCase.inputs,
+                  testCase.testCase.output,
+                  index
+                )
+              }
+              className="h-7 w-20 rounded-lg bg-zinc-600 cursor-pointer"
+            >
+              <p className="flex items-center justify-center h-full">
+                Case {index + 1}
+              </p>
+            </div>
+          ))
         ) : (
           <p className="m-2 text-sm">No test cases available</p>
         )}
       </div>
       {!isLoading ? (
-        selectedTestCase &&
-        (outputVal === "" ? (
-          <TestCaseBoxDetails
-            inputs={selectedTestCase.inputs}
-            expectedOutput={selectedTestCase.expectedOutput}
-            output={undefined}
-          />
-        ) : (
+        selectedTestCase && (
           <TestCaseBoxDetails
             inputs={selectedTestCase.inputs}
             expectedOutput={selectedTestCase.expectedOutput}
             output={selectedTestCase.output}
           />
-        ))
+        )
       ) : (
         <div className="flex h-24 items-center justify-center ml-2 gap-x-2">
           <Loader2 className="animate-spin h-6" />
