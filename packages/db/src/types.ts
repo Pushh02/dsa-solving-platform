@@ -13,11 +13,18 @@ export interface DryRunTestCase {
   status: "SUCCESS" | "ERROR" | "WRONG";
 }
 
+type examples = {
+  example: {
+    input: string,
+    output: string
+  }
+}
+
 export type ProblemSchema = {
   id: string;
   title: string;
   description: string;
-  examples: JsonValue[];
+  examples: examples[];
   constraints: string[];
   followUpQuestion: string | null;
   mainFunction: string;

@@ -27,12 +27,11 @@ const worker = new Worker(
       if (!sol || !problemDetails) return JSON.stringify({ error: "no solution found" });
 
       //mapping the testcases object to run all the testcases on the code
-      const testCases = problemDetails.dryRunTestCases as unknown;
+      const testCases = problemDetails.dryRunTestCases as any;
       let outputArray: any[] = [];
       let outputStatus = true;
 
       try {
-        //@ts-ignore
         for (const testCase of testCases) {
             const filepath = await generateFile(
               sol.language,
@@ -55,7 +54,6 @@ const worker = new Worker(
         }
 
         //Updating the output the completedAt field to track the time took for execution
-        console.log(outputArray)
         if(outputStatus){
           const executedCode = await db.runSubmission.update({
             where: {

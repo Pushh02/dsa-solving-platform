@@ -1,23 +1,14 @@
 "use client";
 
+import { ProblemSchema } from "@repo/db/types";
 import { currentProblem } from "@repo/store/submission";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 
-type problem = {
-  id: String,
-  title: String,
-  description: String,
-  example: JSON,
-  constraints: String[],
-  followUpQuestion?: String,
-  dryRunTestCases: JSON
-}
-
 const ProblemBox = () => {
-  const [problemData, setproblemData] = useState<problem>();
+  const [problemData, setproblemData] = useState<ProblemSchema>();
   const setProblem = useSetRecoilState(currentProblem);
   const router = useRouter();
   
@@ -48,30 +39,27 @@ const ProblemBox = () => {
         <p className="leading-9">
           {problemData?.description}
         </p>
-        <p>
-          Example 1: <br /> <br />
-          Input: nums = [2,7,11,15], target = 9 Output: [0,1] Explanation:
-          Because nums[0] + nums[1] == 9, we return [0, 1]. <br />
-          Example 2:
+        <div>
+          <p className="text-lg mb-2 font-medium">inputs</p>
+          {problemData?.examples.map((example) => {
+            return(
+              <div className="leading-7">
+                <p>{example.example.input}</p>
+                <p>{example.example.output}</p>
+              </div>
+            )
+          })}
+        </div>
+        <div>
+          <p className="text-lg my-2 font-medium"> Constraints: </p>
+          {problemData?.constraints.map((constraints)=>{
+            return(
+              <p className="leading-7">{constraints}</p>
+            )
+          })}
           <br />
-          <br />
-          Input: nums = [3,2,4], target = 6<br />
-          Output: [1,2]
-          <br />
-          Example 3:
-          <br />
-          <br />
-          Input: nums = [3,3], target = 6 Output: [0,1]
-        </p>
-        Constraints: <br />
-        {"2 <= nums.length <= 104"}
-        <br />
-        {"-109 <= nums[i] <= 109"}
-        <br />
-        {"-109 <= target <= 109"}
-        <br />
-        Only one valid answer exists. Follow-up: Can you come up with an
-        algorithm that is less than O(n2) time complexity?
+        </div>
+        <p>{problemData?.followUpQuestion}</p>
       </div>
     </div>
   );
