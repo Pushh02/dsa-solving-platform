@@ -1,3 +1,4 @@
+import { Difficulty } from "@prisma/client";
 import { JsonValue } from "@prisma/client/runtime/library";
 
 export interface TestCase {
@@ -24,6 +25,7 @@ export type ProblemSchema = {
   id: string;
   title: string;
   description: string;
+  difficulty: Difficulty;
   examples: examples[];
   constraints: string[];
   followUpQuestion: string | null;

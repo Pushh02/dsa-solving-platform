@@ -23,6 +23,7 @@ router.post("/post", async (req: Request, res: Response) => {
       data: {
         title: req.body.title,
         description: req.body.description,
+        difficulty: req.body.difficulty,
         examples: req.body.examples,
         constraints: req.body.constraints,
         followUpQuestion: req.body.followUpQuestion,
