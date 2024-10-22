@@ -20,6 +20,12 @@ enum Status {
   WRONG
 }
 
+enum Difficulty {
+  Easy
+  Medium
+  Hard
+}
+
 model Profile {
   id       String @id @default(uuid())
   name     String
@@ -34,31 +40,37 @@ model Profile {
 }
 
 model Problem {
-  id               String   @id @default(uuid())
+  id               String     @id @default(uuid())
   title            String
   description      String
+  difficulty       Difficulty
   examples         Json[]
   constraints      String[]
   followUpQuestion String?
 
-  runSubmissions   RunSubmission[]
-  
-  mainFunction     String
+  runSubmissions RunSubmission[]
+
+  mainFunction    Json
+  defaultCode     Json
+  codeHeaders     Json
+
   dryRunTestCases Json[]
   // submitTestCases Int[]
+
+  @@index([title, difficulty])
 }
 
 model RunSubmission {
-  id       String @id @default(uuid())
+  id       String   @id @default(uuid())
   language String
   filepath String
-  status   Status @default(PENDING)
+  status   Status   @default(PENDING)
   output   String[]
-  
-  profile    Profile  @relation(fields: [profileId], references: [id])
-  profileId  String
-  
-  problem    Problem  @relation(fields: [problemId], references: [id])
+
+  profile   Profile @relation(fields: [profileId], references: [id])
+  profileId String
+
+  problem   Problem @relation(fields: [problemId], references: [id])
   problemId String
 
   submittedAt DateTime  @default(now())

@@ -4,6 +4,7 @@ import fs from "fs";
 import { generateFile } from "../lib/generateFile";
 import { executeCpp } from "../lib/executeCpp";
 import { db } from "../db";
+import { languageSelect, ProblemSchema } from "@repo/db/src/types"
 
 const worker = new Worker(
   "job-runner-queue",
@@ -27,17 +28,17 @@ const worker = new Worker(
       if (!sol || !problemDetails) return JSON.stringify({ error: "no solution found" });
 
       //mapping the testcases object to run all the testcases on the code
-      const testCases = problemDetails.dryRunTestCases as unknown;
+      const testCases = problemDetails.dryRunTestCases as any;
       let outputArray: any[] = [];
       let outputStatus = true;
 
       try {
-        //@ts-ignore
         for (const testCase of testCases) {
             const filepath = await generateFile(
               sol.language,
               sol.filepath,
-              problemDetails.mainFunction,
+              problemDetails.mainFunction as languageSelect,
+              problemDetails.codeHeaders as languageSelect,
               testCase.testCase.inputs
             );
         
@@ -55,7 +56,6 @@ const worker = new Worker(
         }
 
         //Updating the output the completedAt field to track the time took for execution
-        console.log(outputArray)
         if(outputStatus){
           const executedCode = await db.runSubmission.update({
             where: {

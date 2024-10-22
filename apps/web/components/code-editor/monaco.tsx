@@ -13,19 +13,29 @@ import { useEffect, useRef } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 const Monaco = () => {
-  const defaultValue = `vector<int> twoSum(vector<int>& nums, int target){
-    
-}`;
   const editorRef = useRef(null);
-
+  
   const [run, setRun] = useRecoilState(runCode);
   const lang = useRecoilValue(language);
   const setOutput = useSetRecoilState(output);
   const prob = useRecoilValue(currentProblem);
+  
+//   const defaultValue = `vector<int> twoSum(vector<int>& nums, int target){
+    
+// }`;
+// console.log(prob.defaultCode.cpp)
 
-  const { isSignedIn, user } = useUser();
+const { isSignedIn, user } = useUser();
 
-  useEffect(() => {
+let defaultValue;
+if(prob.defaultCode !== undefined && "cpp" in prob.defaultCode){
+  defaultValue = prob.defaultCode.cpp;
+  console.log(defaultValue)
+}
+useEffect(()=>{
+}, [prob])
+console.log(defaultValue)
+useEffect(() => {
     if (isSignedIn) {
       if (run === true) {
         if (user === null) return;
@@ -83,14 +93,14 @@ const Monaco = () => {
 
   return (
     <div className="h-1/2 w-full">
-      <Editor
+      {prob.defaultCode !== undefined && (<Editor
         defaultLanguage={lang}
         height={"100%"}
         width={"100%"}
         theme="vs-dark"
         defaultValue={defaultValue}
         onMount={handleEditorDidMount}
-      />
+      />)}
     </div>
   );
 };

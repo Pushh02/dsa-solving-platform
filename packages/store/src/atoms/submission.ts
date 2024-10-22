@@ -1,13 +1,6 @@
 import { ProblemSchema } from "@repo/db/types";
 import { atom } from "recoil";
 
-interface TestCase {
-  testCase: {
-    inputs: string[];
-    output: string;
-  };
-}
-
 interface OutputInterface {
   output: string[];
   status: "SUCCESS" | "ERROR" | "WRONG";

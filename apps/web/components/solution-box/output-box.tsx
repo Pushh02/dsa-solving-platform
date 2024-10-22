@@ -35,6 +35,9 @@ const OutputBox = () => {
 
         if (typeof outputVal === "object" && "output" in outputVal) {
           outputForTestCase = outputVal.output[0];
+          if (outputVal.output[0] === "") {
+            outputForTestCase = ("null");
+          }
         } else if (typeof outputVal === "string") {
           outputForTestCase = outputVal;
         }
@@ -47,7 +50,6 @@ const OutputBox = () => {
       }
     }
   }, [problem, outputVal]);
-
   const showInputsAndOutput = (
     inputs: string[],
     expectedOutput: string,
@@ -57,13 +59,15 @@ const OutputBox = () => {
 
     if (typeof outputVal === "object" && "output" in outputVal) {
       output = outputVal.output[index];
+      if (outputVal.output[index] === "") {
+        output = ("null");
+      }
     } else if (typeof outputVal === "string") {
       output = index === 0 ? outputVal : undefined;
     }
 
     setSelectedTestCase({ inputs, expectedOutput, output });
   };
-  console.log(outputVal);
   return (
     <>
       <h2 className="text-xl font-semibold m-2">Output:</h2>

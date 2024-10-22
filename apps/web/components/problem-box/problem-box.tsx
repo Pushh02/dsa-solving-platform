@@ -1,77 +1,84 @@
 "use client";
 
+import { cn } from "@/lib/utils";
+import { Difficulty } from "@prisma/client";
+import { ProblemSchema } from "@repo/db/types";
 import { currentProblem } from "@repo/store/submission";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 
-type problem = {
-  id: String,
-  title: String,
-  description: String,
-  example: JSON,
-  constraints: String[],
-  followUpQuestion?: String,
-  dryRunTestCases: JSON
-}
-
 const ProblemBox = () => {
-  const [problemData, setproblemData] = useState<problem>();
+  const [problemData, setproblemData] = useState<ProblemSchema>();
   const setProblem = useSetRecoilState(currentProblem);
   const router = useRouter();
-  
-  useEffect(()=>{
-    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/problem`, {
-      headers: {
-        "Content-Type": "application/json"
-      },
-      params: { title: "1. 2Sum" }
-    }).then((problem)=>{
-      return problem.data;
-    }).then((data)=>{
-      setProblem(data)
-      setproblemData(data)
-    }).catch((err)=>{
-      router.replace("/");
-      console.log(err)
-    })
-  }, [])
+  const url = usePathname();
+  const split = url.split("/")
+  //@ts-ignore
+  const title = (decodeURIComponent(split[split.length-1]))
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/problem/get`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        params: { title: title },
+      })
+      .then((problem) => {
+        return problem.data;
+      })
+      .then((data) => {
+        setProblem(data);
+        setproblemData(data);
+      })
+      .catch((err) => {
+        router.replace("/");
+        console.log(err);
+      });
+  }, []);
 
   // if(!problem)
   //   router.replace("/");
-      
+
   return (
     <div className="h-[89vh] w-[47vw] border-[1px] rounded-lg border-slate-400 p-4 overflow-auto">
-      <h1 className="text-3xl font-semibold">{problemData?.title}</h1>
-      <div className="text-[#d1d1d1] text-md mt-2">
-        <p className="leading-9">
-          {problemData?.description}
-        </p>
-        <p>
-          Example 1: <br /> <br />
-          Input: nums = [2,7,11,15], target = 9 Output: [0,1] Explanation:
-          Because nums[0] + nums[1] == 9, we return [0, 1]. <br />
-          Example 2:
+      <h1 className="text-2xl font-semibold">{problemData?.title}</h1>
+      <p className="text-xs mt-2">
+      difficulty: 
+      <span
+        className={cn(
+          "ml-2",
+          (problemData?.difficulty === Difficulty.Easy && "text-emerald-400") ||
+          (problemData?.difficulty === Difficulty.Medium &&"text-yellow-500") ||
+          (problemData?.difficulty === Difficulty.Hard && "text-rose-500")
+        )}
+      >
+        {problemData?.difficulty}
+      </span>
+      </p>
+      <div className="text-[#d1d1d1] text-sm mt-2">
+        <p className="leading-9">{problemData?.description}</p>
+        <div>
+          <p className="text-lg mb-2 font-medium text-white">inputs</p>
+          {problemData?.examples.map((example) => {
+            return (
+              <div className="leading-7">
+                <p>{example.example.input}</p>
+                <p>{example.example.output}</p>
+              </div>
+            );
+          })}
+        </div>
+        <div>
+          <p className="text-lg my-2 font-medium text-white"> Constraints: </p>
+          {problemData?.constraints.map((constraints) => {
+            return <p className="leading-7">{constraints}</p>;
+          })}
           <br />
-          <br />
-          Input: nums = [3,2,4], target = 6<br />
-          Output: [1,2]
-          <br />
-          Example 3:
-          <br />
-          <br />
-          Input: nums = [3,3], target = 6 Output: [0,1]
-        </p>
-        Constraints: <br />
-        {"2 <= nums.length <= 104"}
-        <br />
-        {"-109 <= nums[i] <= 109"}
-        <br />
-        {"-109 <= target <= 109"}
-        <br />
-        Only one valid answer exists. Follow-up: Can you come up with an
-        algorithm that is less than O(n2) time complexity?
+        </div>
+        <p>{problemData?.followUpQuestion}</p>
       </div>
     </div>
   );

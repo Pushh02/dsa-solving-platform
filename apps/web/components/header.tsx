@@ -3,7 +3,7 @@ import { useRecoilState } from "recoil";
 import { runCode } from "@repo/store/submission";
 import { UserButton } from "@clerk/nextjs";
 
-const Navbar = () => {
+const Header = () => {
   const [run, setRun] = useRecoilState(runCode);
   return (
     <nav className="flex text-white w-screen h-[9vh] bg-[#222222] px-2 items-center justify-between">
@@ -29,4 +29,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default Header;
