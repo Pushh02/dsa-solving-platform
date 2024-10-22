@@ -50,7 +50,6 @@ const OutputBox = () => {
       }
     }
   }, [problem, outputVal]);
-  console.log(selectedTestCase)
   const showInputsAndOutput = (
     inputs: string[],
     expectedOutput: string,

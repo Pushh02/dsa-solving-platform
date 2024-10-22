@@ -17,7 +17,6 @@ const ProblemBox = () => {
   const split = url.split("/")
   //@ts-ignore
   const title = (decodeURIComponent(split[split.length-1]))
-  console.log(title)
 
   useEffect(() => {
     axios
