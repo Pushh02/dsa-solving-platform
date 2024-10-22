@@ -21,6 +21,10 @@ type examples = {
   }
 }
 
+export type languageSelect = {
+  cpp: string;
+}
+
 export type ProblemSchema = {
   id: string;
   title: string;
@@ -29,6 +33,8 @@ export type ProblemSchema = {
   examples: examples[];
   constraints: string[];
   followUpQuestion: string | null;
-  mainFunction: string;
+  mainFunction: languageSelect;
+  defaultCode: languageSelect;
+  codeHeaders: languageSelect;
   dryRunTestCases: TestCase[];
 };

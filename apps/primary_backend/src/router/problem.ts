@@ -28,6 +28,8 @@ router.post("/post", async (req: Request, res: Response) => {
         constraints: req.body.constraints,
         followUpQuestion: req.body.followUpQuestion,
         mainFunction: req.body.mainFunction,
+        codeHeaders: req.body.codeHeaders,
+        defaultCode: req.body.defaultCode,
         dryRunTestCases: req.body.dryRunTestCases,
         // submitTestCases: req.body.submitTestCases,
       },

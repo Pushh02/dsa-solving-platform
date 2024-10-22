@@ -40,7 +40,7 @@ model Profile {
 }
 
 model Problem {
-  id               String   @id @default(uuid())
+  id               String     @id @default(uuid())
   title            String
   description      String
   difficulty       Difficulty
@@ -50,7 +50,10 @@ model Problem {
 
   runSubmissions RunSubmission[]
 
-  mainFunction    String
+  mainFunction    Json
+  defaultCode     Json
+  codeHeaders     Json
+
   dryRunTestCases Json[]
   // submitTestCases Int[]
 }

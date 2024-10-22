@@ -4,6 +4,7 @@ import fs from "fs";
 import { generateFile } from "../lib/generateFile";
 import { executeCpp } from "../lib/executeCpp";
 import { db } from "../db";
+import { languageSelect, ProblemSchema } from "@repo/db/src/types"
 
 const worker = new Worker(
   "job-runner-queue",
@@ -36,7 +37,8 @@ const worker = new Worker(
             const filepath = await generateFile(
               sol.language,
               sol.filepath,
-              problemDetails.mainFunction,
+              problemDetails.mainFunction as languageSelect,
+              problemDetails.codeHeaders as languageSelect,
               testCase.testCase.inputs
             );
         
