@@ -1,11 +1,40 @@
+import HomePage from "@/components/home-page/home-page";
 import { initialProfile } from "@/lib/initial-profile";
-import { UserButton, UserProfile } from "@clerk/nextjs";
+// import { UserButton, UserProfile } from "@clerk/nextjs";
 
-const Home = async() => {
+const Home = async () => {
   const profile = await initialProfile();
-  return ( 
-    <div>hello <UserButton /></div>
-   );
-}
- 
+  const { id } = profile;
+  console.log(id);
+  return (
+    <div>
+      <HomePage />
+      <div className="bg-white">
+        <section className="bg-yellow-50 text-black flex flex-col md:flex-row">
+          {/* 70% Column */}
+          <div className="flex-1 flex items-center justify-center p-6">
+            <div className="text-left">
+              <h6 className="text-4xl md:text-6xl font-bold mb-4">Coding Genius</h6>
+              <p className="text-md md:text-lg mb-8">
+                Unlock your potential with our coding challenges and guided resources.
+                Unlock your potential with our coding challenges and guided resources.
+              </p>
+            </div>
+          </div>
+
+          {/* 30% Column */}
+          <div className="flex-shrink-0 w-full md:w-1/3 flex items-center justify-center p-6">
+            <img
+              src="assets/images/hero.png"
+              alt="Coding Genius"
+              className="w-full max-w-[300px] h-auto"
+            />
+          </div>
+        </section>
+
+      </div>
+    </div>
+  );
+};
+
 export default Home;
