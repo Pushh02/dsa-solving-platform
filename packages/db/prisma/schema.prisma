@@ -56,6 +56,8 @@ model Problem {
 
   dryRunTestCases Json[]
   // submitTestCases Int[]
+
+  @@index([title, difficulty])
 }
 
 model RunSubmission {

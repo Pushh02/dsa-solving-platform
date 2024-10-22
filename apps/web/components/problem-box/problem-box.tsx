@@ -5,7 +5,7 @@ import { Difficulty } from "@prisma/client";
 import { ProblemSchema } from "@repo/db/types";
 import { currentProblem } from "@repo/store/submission";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 
@@ -13,14 +13,19 @@ const ProblemBox = () => {
   const [problemData, setproblemData] = useState<ProblemSchema>();
   const setProblem = useSetRecoilState(currentProblem);
   const router = useRouter();
+  const url = usePathname();
+  const split = url.split("/")
+  //@ts-ignore
+  const title = (decodeURIComponent(split[split.length-1]))
+  console.log(title)
 
   useEffect(() => {
     axios
-      .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/problem`, {
+      .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/problem/get`, {
         headers: {
           "Content-Type": "application/json",
         },
-        params: { title: "1. 2Sum" },
+        params: { title: title },
       })
       .then((problem) => {
         return problem.data;
@@ -40,8 +45,8 @@ const ProblemBox = () => {
 
   return (
     <div className="h-[89vh] w-[47vw] border-[1px] rounded-lg border-slate-400 p-4 overflow-auto">
-      <h1 className="text-3xl font-semibold">{problemData?.title}</h1>
-      <p className="text-sm mt-2">
+      <h1 className="text-2xl font-semibold">{problemData?.title}</h1>
+      <p className="text-xs mt-2">
       difficulty: 
       <span
         className={cn(
@@ -54,10 +59,10 @@ const ProblemBox = () => {
         {problemData?.difficulty}
       </span>
       </p>
-      <div className="text-[#d1d1d1] text-md mt-2">
+      <div className="text-[#d1d1d1] text-sm mt-2">
         <p className="leading-9">{problemData?.description}</p>
         <div>
-          <p className="text-lg mb-2 font-medium">inputs</p>
+          <p className="text-lg mb-2 font-medium text-white">inputs</p>
           {problemData?.examples.map((example) => {
             return (
               <div className="leading-7">
@@ -68,7 +73,7 @@ const ProblemBox = () => {
           })}
         </div>
         <div>
-          <p className="text-lg my-2 font-medium"> Constraints: </p>
+          <p className="text-lg my-2 font-medium text-white"> Constraints: </p>
           {problemData?.constraints.map((constraints) => {
             return <p className="leading-7">{constraints}</p>;
           })}
