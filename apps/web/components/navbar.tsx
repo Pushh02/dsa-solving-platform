@@ -3,9 +3,13 @@ import { UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useState } from "react";
-// import React, { useState } from "react";
+import { cn } from "@/lib/utils";
 
-const Navbar = () => {
+interface NavbarProps {
+  bgColor?: "bg-zinc-700";
+}
+
+const Navbar = ({ bgColor }: NavbarProps) => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
@@ -13,7 +17,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white p-4">
+    <nav className={cn("p-4", bgColor ? bgColor : "bg-white")}>
       <div className="container mx-auto flex justify-between items-center">
         <div className="text-customGreen text-lg font-bold">Coding Genius</div>
 
@@ -42,28 +46,28 @@ const Navbar = () => {
         </div>
 
         {/* Menu for larger screens */}
-        <div className="hidden md:flex space-x-6">
+        <div className={cn("hidden md:flex space-x-6", bgColor ? "text-white" : "text-black")}>
           <Link
             href="/problem"
-            className="text-black relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:bg-customGreen after:w-0 after:transition-width after:duration-300 hover:after:w-full"
+            className="relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:bg-customGreen after:w-0 after:transition-width after:duration-300 hover:after:w-full"
           >
             Problem
           </Link>
           <Link
             href="/about"
-            className="text-black relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:bg-customGreen after:w-0 after:transition-width after:duration-300 hover:after:w-full"
+            className="relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:bg-customGreen after:w-0 after:transition-width after:duration-300 hover:after:w-full"
           >
             Guided List
           </Link>
           <Link
             href="/services"
-            className="text-black relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:bg-customGreen after:w-0 after:transition-width after:duration-300 hover:after:w-full"
+            className="relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:bg-customGreen after:w-0 after:transition-width after:duration-300 hover:after:w-full"
           >
             About Us
           </Link>
           <Link
             href="/contact"
-            className="text-black relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:bg-customGreen after:w-0 after:transition-width after:duration-300 hover:after:w-full"
+            className="relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:bg-customGreen after:w-0 after:transition-width after:duration-300 hover:after:w-full"
           >
             Contribute
           </Link>

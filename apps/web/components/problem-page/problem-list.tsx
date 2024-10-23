@@ -21,17 +21,20 @@ const ProblemList = () => {
   }, []);
   
   return (
-    <div className="w-full m-4">
+    <div>
       {problems.length > 0 &&
         problems.map((problem) => {
           return (
             <Link
               href={{pathname: `/problem/${problem.title}`}}
-              className="w-full h-14 flex items-center justify-between px-6 cursor-pointer rounded-md mb-4 bg-zinc-700/40 hover:bg-zinc-700/60"
+              className="w-full h-14 flex items-center px-6 cursor-pointer rounded-md mb-4 bg-zinc-700/40 hover:bg-zinc-700/60"
             >
-              <p className="text-xl truncate max-w-[30%]">{problem.title}</p>
-              <div className="text-xs w-[60%] h-8 overflow-hidden">
+              <p className="text-lg truncate w-[22%]">{problem.title}</p>
+              <div className="text-xs w-[59%] h-8 overflow-hidden">
                 <p className="">{problem.description}...</p>
+              </div>
+              <div className="w-[10%]">
+                <p className="text-xs text-center">Array</p>
               </div>
               <span
                 className={cn(
