@@ -1,5 +1,6 @@
-import HomePage from "@/components/home-page/home-page";
+import Navbar from "@/components/navbar";
 import { initialProfile } from "@/lib/initial-profile";
+import Image from "next/image";
 // import { UserButton, UserProfile } from "@clerk/nextjs";
 
 const Home = async () => {
@@ -8,7 +9,7 @@ const Home = async () => {
   console.log(id);
   return (
     <div>
-      <HomePage />
+      <Navbar />
       <div className="bg-white">
         <section className="bg-yellow-50 text-black flex flex-col md:flex-row">
           {/* 70% Column */}
@@ -24,7 +25,7 @@ const Home = async () => {
 
           {/* 30% Column */}
           <div className="flex-shrink-0 w-full md:w-1/3 flex items-center justify-center p-6">
-            <img
+            <Image
               src="assets/images/hero.png"
               alt="Coding Genius"
               className="w-full max-w-[300px] h-auto"

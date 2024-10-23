@@ -1,10 +1,10 @@
 "use client"
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { runCode } from "@repo/store/submission";
 import { UserButton } from "@clerk/nextjs";
 
 const Header = () => {
-  const [run, setRun] = useRecoilState(runCode);
+  const setRun = useSetRecoilState(runCode);
   return (
     <nav className="flex text-white w-screen h-[9vh] bg-[#222222] px-2 items-center justify-between">
       <p className="text-3xl ml-4">CG</p>

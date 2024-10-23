@@ -6,8 +6,7 @@ import Header from "@/components/header";
 import ProblemBox from "@/components/problem-box/problem-box";
 import SolutionBox from "@/components/solution-box/solution-box";
 
-export default async function Home() {
-
+export default function Home() {
   return (
     <RecoilRoot>
       <div className="h-screen w-screen overflow-hidden">

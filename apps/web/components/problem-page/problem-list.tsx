@@ -5,12 +5,10 @@ import { Difficulty } from "@prisma/client";
 import { ProblemSchema } from "@repo/db/types";
 import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const ProblemList = () => {
   const [problems, setProblems] = useState<ProblemSchema[]>([]);
-  const router = useRouter();
   useEffect(() => {
     axios
       .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/problem`)

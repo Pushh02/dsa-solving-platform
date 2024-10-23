@@ -19,11 +19,6 @@ const Monaco = () => {
   const lang = useRecoilValue(language);
   const setOutput = useSetRecoilState(output);
   const prob = useRecoilValue(currentProblem);
-  
-//   const defaultValue = `vector<int> twoSum(vector<int>& nums, int target){
-    
-// }`;
-// console.log(prob.defaultCode.cpp)
 
 const { isSignedIn, user } = useUser();
 
@@ -82,7 +77,7 @@ useEffect(() => {
   }, [run]);
 
   //@ts-ignore
-  function handleEditorDidMount(editor, monaco) {
+  function handleEditorDidMount(editor) {
     editorRef.current = editor;
   }
 
