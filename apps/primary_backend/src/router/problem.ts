@@ -34,6 +34,7 @@ router.post("/post", async (req: Request, res: Response) => {
         title: req.body.title,
         description: req.body.description,
         difficulty: req.body.difficulty,
+        topics: req.body.topics,
         examples: req.body.examples,
         constraints: req.body.constraints,
         followUpQuestion: req.body.followUpQuestion || "",

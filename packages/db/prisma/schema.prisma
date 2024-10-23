@@ -47,12 +47,13 @@ model Problem {
   examples         Json[]
   constraints      String[]
   followUpQuestion String?
+  topics           String[]
 
   runSubmissions RunSubmission[]
 
-  mainFunction    Json
-  defaultCode     Json
-  codeHeaders     Json
+  mainFunction Json
+  defaultCode  Json
+  codeHeaders  Json
 
   dryRunTestCases Json[]
   // submitTestCases Int[]

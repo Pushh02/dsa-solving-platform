@@ -6,7 +6,7 @@ interface TestCaseBoxDetailsProps {
 
 const TestCaseBoxDetails = ({ inputs, output, expectedOutput }: TestCaseBoxDetailsProps) => {
   return (
-    <div className="w-full">
+    <div className="w-full text-sm">
       {inputs.length > 0 &&
         inputs.map((input, i) => {
           return (

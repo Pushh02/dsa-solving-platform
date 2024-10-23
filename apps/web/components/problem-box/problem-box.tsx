@@ -64,7 +64,7 @@ const ProblemBox = () => {
           <p className="text-lg mb-2 font-medium text-white">inputs</p>
           {problemData?.examples.map((example) => {
             return (
-              <div className="leading-7">
+              <div className="leading-7 mb-2">
                 <p>{example.example.input}</p>
                 <p>{example.example.output}</p>
               </div>

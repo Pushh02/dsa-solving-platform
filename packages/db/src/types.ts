@@ -30,6 +30,7 @@ export type ProblemSchema = {
   title: string;
   description: string;
   difficulty: Difficulty;
+  topics: string[];
   examples: examples[];
   constraints: string[];
   followUpQuestion: string | null;

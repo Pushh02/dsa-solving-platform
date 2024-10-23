@@ -29,12 +29,12 @@ const ProblemList = () => {
               href={{pathname: `/problem/${problem.title}`}}
               className="w-full h-14 flex items-center px-6 cursor-pointer rounded-md mb-4 bg-zinc-700/40 hover:bg-zinc-700/60"
             >
-              <p className="text-lg truncate w-[22%]">{problem.title}</p>
+              <p className="text-lg truncate w-[23%] -ml-1">{problem.title}</p>
               <div className="text-xs w-[59%] h-8 overflow-hidden">
                 <p className="">{problem.description}...</p>
               </div>
               <div className="w-[10%]">
-                <p className="text-xs text-center">Array</p>
+                <p className="text-[0.6rem] text-center">{problem.topics[0]}</p>
               </div>
               <span
                 className={cn(
