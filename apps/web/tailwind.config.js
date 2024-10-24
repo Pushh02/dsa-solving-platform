@@ -16,6 +16,9 @@ module.exports = {
       backgroundColor: {
         customGreen: "#62BD53",
       },
+      backgroundImage: {
+        "dotedBg": "url('/assets/images/doted-bg.png')",
+      },
       colors: {
         customGreen: "#62BD53",
         background: "hsl(var(--background))",
