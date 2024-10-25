@@ -1,25 +1,26 @@
-"use client";
-
 import { cn } from "@/lib/utils";
 import { Difficulty } from "@prisma/client";
 import { ProblemSchema } from "@repo/db/types";
-import axios from "axios";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { use } from "react";
 
-const ProblemList = () => {
-  const [problems, setProblems] = useState<ProblemSchema[]>([]);
-  useEffect(() => {
-    axios
-      .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/problem`)
-      .then((response) => {
-        return response.data;
-      })
-      .then((data) => {
-        setProblems(data);
-      });
-  }, []);
+async function getProblems(): Promise<ProblemSchema[]> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/problem`, {
+    // Enable caching by default
+    // cache: 'force-cache',
+    // Or use no-store for always fresh data
+    cache: 'no-store'
+  });
   
+  if (!res.ok) {
+    throw new Error('Failed to fetch problems');
+  }
+  
+  setTimeout(()=>{}, 5000)
+  return res.json();
+}
+const ProblemList = () => {
+  const problems = use(getProblems());
   return (
     <div>
       {problems.length > 0 &&

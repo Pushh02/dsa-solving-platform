@@ -1,5 +1,7 @@
 import Navbar from "@/components/navbar";
 import ProblemList from "@/components/problem-page/problem-list";
+import ProblemLoading from "@/components/problem-page/problem-loading";
+import { Suspense } from "react";
 
 const Page = () => {
   return (
@@ -23,7 +25,9 @@ const Page = () => {
         </aside>
         <div className="w-full mx-4">
           <h2 className="text-2xl p-4">All Problems</h2>
-          <ProblemList />
+          <Suspense fallback={<ProblemLoading />}>
+            <ProblemList />
+          </Suspense>
         </div>
       </div>
     </div>

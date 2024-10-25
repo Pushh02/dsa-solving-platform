@@ -21,35 +21,36 @@ const FloatingHeading = ({
   description,
   delay
 }: FloatingHeadingProps) => {
-  const divRef = useRef<HTMLDivElement>(null);
+  const divRef = useRef<HTMLDivElement | null>(null);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   useEffect(() => {
-
     if (isInitialLoad && divRef.current) {
         if (divRef.current) {
           divRef.current.style.transition = `all ${delay}s cubic-bezier(0.4, 0, 0.2, 1)`;
           setIsInitialLoad(false);
         }
     }
-    const handleMouseMove = (event: MouseEvent) => {
-      const percentX = (event.clientX / window.innerWidth) * 100;
-      const percentY = (event.clientY / window.innerHeight) * 100;
-      if (divRef.current) {
-        const elementWidth = divRef.current.offsetWidth;
-        const elementHeight = divRef.current.offsetHeight;
-        const offsetX = (elementWidth / window.innerWidth) * 100;
-        const offsetY = (elementHeight / window.innerHeight) * 100;
-
-        divRef.current.style.top = `${percentY - offsetY}%`;
-        divRef.current.style.left = `${percentX - offsetX}%`;
-      }
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
+    if(divRef.current){
+      const handleMouseMove = (event: MouseEvent) => {
+        const percentX = (event.clientX / window.innerWidth) * 100;
+        const percentY = (event.clientY / window.innerHeight) * 100;
+        if (divRef.current) {
+          const elementWidth = divRef.current.offsetWidth;
+          const elementHeight = divRef.current.offsetHeight;
+          const offsetX = (elementWidth / window.innerWidth) * 100;
+          const offsetY = (elementHeight / window.innerHeight) * 100;
+  
+          divRef.current.style.top = `${percentY - offsetY}%`;
+          divRef.current.style.left = `${percentX - offsetX}%`;
+        }
+      };
+      window.addEventListener("mousemove", handleMouseMove);
+  
+      return () => {
+        window.removeEventListener("mousemove", handleMouseMove);
+      };
+    }
   }, [isInitialLoad]);
   return (
     <div

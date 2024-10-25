@@ -107,4 +107,5 @@ const Navbar = ({ bgColor }: NavbarProps) => {
 };
 
 // Export the Navbar component with dynamic import to avoid SSR
-export default dynamic(() => Promise.resolve(Navbar), { ssr: false });
+// export default dynamic(() => Promise.resolve(Navbar), { ssr: false });
+export default Navbar;
