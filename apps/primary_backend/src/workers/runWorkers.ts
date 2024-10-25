@@ -4,7 +4,7 @@ import fs from "fs";
 import { generateFile } from "../lib/generateFile";
 import { executeCpp } from "../lib/executeCpp";
 import { db } from "../db";
-import { languageSelect, ProblemSchema } from "@repo/db/src/types"
+import { languageSelect } from "@repo/db/src/types"
 
 const worker = new Worker(
   "job-runner-queue",

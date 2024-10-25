@@ -1,4 +1,5 @@
 import { Request, Response, Router } from "express";
+import { SQS } from "@aws-sdk/client-sqs";
 
 import { db } from "../db";
 import { addJobToQueue } from "../queues/runQueue";
@@ -13,8 +14,11 @@ router.post("/run", async (req: Request, res: Response) => {
       .status(400)
       .json({ success: false, error: "lang or code not provided" });
 
+  try {
+    const sqs = new SQS({
+      region: process.env.REGION,
+    });
 
-  try{
     const submitSol = await db.runSubmission.create({
       data: {
         problemId,
@@ -22,19 +26,24 @@ router.post("/run", async (req: Request, res: Response) => {
         filepath: code,
         output: [],
         profileId,
-      }
-    })
-    addJobToQueue(submitSol.id);
+      },
+    });
+    await sqs.sendMessage({
+      QueueUrl: process.env.QUEUE_URL,
+      MessageBody: submitSol.id,
+      MessageGroupId: "run",
+      MessageDeduplicationId: submitSol.id,
+    });
 
     return res.send(submitSol.id);
-  } catch(err) {
+  } catch (err) {
     res.json(err);
   }
 });
 
 router.post("/submit", (req: Request, res: Response) => {});
 
-router.post("/check", async(req: Request, res: Response) =>{
+router.post("/check", async (req: Request, res: Response) => {
   const solutionId = req.body.solutionId;
 
   const solution = await db.runSubmission.findFirst({
@@ -42,10 +51,10 @@ router.post("/check", async(req: Request, res: Response) =>{
       id: solutionId,
     },
     include: {
-      problem: true
-    }
-  })
+      problem: true,
+    },
+  });
   res.json(solution);
-})
+});
 
 export default router;

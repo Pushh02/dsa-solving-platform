@@ -25,11 +25,8 @@ const { isSignedIn, user } = useUser();
 let defaultValue;
 if(prob.defaultCode !== undefined && "cpp" in prob.defaultCode){
   defaultValue = prob.defaultCode.cpp;
-  console.log(defaultValue)
 }
-useEffect(()=>{
-}, [prob])
-console.log(defaultValue)
+
 useEffect(() => {
     if (isSignedIn) {
       if (run === true) {
@@ -48,6 +45,7 @@ useEffect(() => {
             profileId: user.id,
           })
           .then(function (response) {
+            console.log(response.data)
             solutionId = response.data;
           })
           .catch(function (error) {
