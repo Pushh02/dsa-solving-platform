@@ -63,10 +63,15 @@ const FloatingHeading = ({
             transform: 'translate(-50%, -50%)',
             willChange: 'top, left',
           }}
-          className="flex items-center py-1 ml-10 absolute whitespace-nowrap bg-gradient-to-r from-[#62BD5399] to-[#27265799] rounded-md pr-2 cursor-default"
+          className="group py-1 ml-10 w-52 absolute whitespace-nowrap bg-gradient-to-r from-[#62BD5399] to-[#27265799] rounded-md pr-2 cursor-default"
         >
-          <CircleDot className="h-4" />{" "}
-          <p className="font-semibold text-sm">{title}</p>
+          <div className="flex items-center">
+            <CircleDot className="h-4" />{" "}
+            <p className="font-semibold text-sm">{title}</p>
+          </div>
+          <div className="max-h-0 group-hover:max-h-24 transition-all duration-300 ease-in-out w-fit whitespace-normal text-sm mx-2">
+            <p className="opacity-0 group-hover:opacity-100 transition-opacity duration-150">{description}</p>
+          </div>
         </div>
       </div>
     </div>

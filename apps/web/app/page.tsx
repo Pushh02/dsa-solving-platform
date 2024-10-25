@@ -36,28 +36,28 @@ const Home = async () => {
               right="30%"
               delay="0.4"
               title="Guided DSA questions"
-              description="doijfdosfhsdofhdofhsdfohsd"
+              description="Unlock your potential with our coding challenges and guided resources."
             />
             <FloatingHeading
               top="4%"
               left="3%"
               delay="0.5"
               title="Guided DSA questions"
-              description="doijfdosfhsdofhdofhsdfohsd"
+              description="Unlock your potential with our coding challenges and guided resources."
             />
             <FloatingHeading
               bottom="-8%"
               left="14%"
               delay="0.7"
               title="Guided DSA questions"
-              description="doijfdosfhsdofhdofhsdfohsd"
+              description="Unlock your potential with our coding challenges and guided resources."
             />
             <FloatingHeading
               bottom="10%"
               right="25%"
               delay="0.6"
               title="Guided DSA questions"
-              description="doijfdosfhsdofhdofhsdfohsd"
+              description="Unlock your potential with our coding challenges and guided resources."
             />
           </div>
         </div>
@@ -66,8 +66,10 @@ const Home = async () => {
         <div className="flex-shrink-0 w-full md:w-1/3 xl:w-1/4 flex items-center justify-center p-6">
           <div className="relative">
             <div className="absolute top-[40%] left-[30%]">
-              <p className="font-bold text-white -ml-4">You after joining this platform</p>
-              <Image src={Arrow} alt="img" height={60} width={60}  />
+              <p className="font-bold text-white -ml-4">
+                You after joining this platform
+              </p>
+              <Image src={Arrow} alt="img" height={60} width={60} />
             </div>
             <Image
               src={heroImg}
