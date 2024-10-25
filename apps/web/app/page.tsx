@@ -1,8 +1,10 @@
 import Navbar from "@/components/navbar";
 import { initialProfile } from "@/lib/initial-profile";
 import Image from "next/image";
-import heroImg from "../public/assets/images/hero.png";
 import FloatingHeading from "@/components/home-page/floating-headings";
+
+//Image imports
+import heroImg from "../public/assets/images/hero.png";
 import Svg1 from "../public/assets/images/svg1.svg";
 import SillyEmoji from "../public/assets/images/silly-img.png";
 import Arrow from "../public/assets/images/arrow.png";
@@ -30,26 +32,30 @@ const Home = async () => {
           </div>
           <div className="w-full h-[25vh] relative">
             <FloatingHeading
-              top="-10%"
-              right="10%"
+              top="-20%"
+              right="30%"
+              delay="0.4"
               title="Guided DSA questions"
               description="doijfdosfhsdofhdofhsdfohsd"
             />
             <FloatingHeading
-              top="20%"
-              left="8%"
+              top="4%"
+              left="3%"
+              delay="0.5"
               title="Guided DSA questions"
               description="doijfdosfhsdofhdofhsdfohsd"
             />
             <FloatingHeading
-              bottom="0%"
+              bottom="-8%"
               left="14%"
+              delay="0.7"
               title="Guided DSA questions"
               description="doijfdosfhsdofhdofhsdfohsd"
             />
             <FloatingHeading
-              bottom="23%"
-              right="17%"
+              bottom="10%"
+              right="25%"
+              delay="0.6"
               title="Guided DSA questions"
               description="doijfdosfhsdofhdofhsdfohsd"
             />
