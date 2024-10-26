@@ -51,6 +51,7 @@ useEffect(() => {
             console.log(error);
           });
 
+        let count = 0;
         let interval = setInterval(async () => {
           const solutionStatus = await axios.post(
             `${process.env.NEXT_PUBLIC_BACKEND_URL}/compile/check`,
@@ -68,6 +69,12 @@ useEffect(() => {
             setOutput({output: solutionStatus.data.output, status: "WRONG"});
             clearInterval(interval);
           }
+
+          if(count >= 9){
+            setOutput({output: ["Time Limit Exceeded - Too slow lil bro"], status: "ERROR"});
+            clearInterval(interval);
+          }
+          count += 1;
         }, 700);
       }
     }
