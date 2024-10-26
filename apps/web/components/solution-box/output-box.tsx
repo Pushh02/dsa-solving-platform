@@ -14,12 +14,13 @@ const OutputBox = () => {
     expectedOutput: string;
     output: string | undefined;
   } | null>(null);
-
+  
   useEffect(() => {
     if (outputVal === "PENDING") {
       setIsLoading(true);
     } else {
       setIsLoading(false);
+      console.log(typeof outputVal)
     }
   }, [outputVal]);
 
@@ -40,6 +41,8 @@ const OutputBox = () => {
           }
         } else if (typeof outputVal === "string") {
           outputForTestCase = outputVal;
+        } else if (typeof outputVal === "object") {
+          outputForTestCase = outputVal[0];
         }
 
         setSelectedTestCase({
@@ -64,6 +67,8 @@ const OutputBox = () => {
       }
     } else if (typeof outputVal === "string") {
       output = index === 0 ? outputVal : undefined;
+    } else if (typeof outputVal === "object") {
+      output = outputVal[0];
     }
 
     setSelectedTestCase({ inputs, expectedOutput, output });

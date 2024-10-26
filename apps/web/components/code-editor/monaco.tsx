@@ -45,7 +45,6 @@ useEffect(() => {
             profileId: user.id,
           })
           .then(function (response) {
-            console.log(response.data)
             solutionId = response.data;
           })
           .catch(function (error) {
@@ -63,7 +62,7 @@ useEffect(() => {
             setOutput({output: solutionStatus.data.output, status: "SUCCESS"});
             clearInterval(interval);
           } else if (solutionStatus.data.status === "ERROR") {
-            setOutput(solutionStatus.data.output);
+            setOutput({output: solutionStatus.data.output, status: "ERROR"});
             clearInterval(interval);
           } else if (solutionStatus.data.status === "WRONG") {
             setOutput({output: solutionStatus.data.output, status: "WRONG"});
