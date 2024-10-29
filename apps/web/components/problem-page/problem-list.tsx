@@ -1,15 +1,13 @@
 import { cn } from "@/lib/utils";
 import { Difficulty } from "@prisma/client";
-import { ProblemSchema } from "@repo/db/types";
+import { ProblemSchema } from "";
 import Link from "next/link";
 import { use } from "react";
 
 async function getProblems(): Promise<ProblemSchema[]> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/problem`, {
-    // Enable caching by default
-    // cache: 'force-cache',
-    // Or use no-store for always fresh data
-    cache: 'no-store'
+    cache: 'force-cache',
+    // cache: 'no-store'
   });
   
   if (!res.ok) {

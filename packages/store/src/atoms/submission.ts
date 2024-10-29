@@ -1,4 +1,4 @@
-import { ProblemSchema } from "@repo/db/types";
+import { ProblemSchema, submitionOutput } from "@repo/db/types";
 import { atom } from "recoil";
 
 interface OutputInterface {
@@ -9,6 +9,16 @@ interface OutputInterface {
 export const runCode = atom({
   key: "runCode",
   default: false,
+});
+
+export const submitCode = atom({
+  key: "submitCode",
+  default: false,
+});
+
+export const submitOutput = atom({
+  key: "submitOutput",
+  default: "" as string | submitionOutput,
 });
 
 export const language = atom({

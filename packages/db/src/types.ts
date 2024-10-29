@@ -10,8 +10,14 @@ export interface TestCase {
 
 export interface DryRunTestCase {
   expectedOutput: TestCase[];
-  output: string[];
+  output: string;
   status: "SUCCESS" | "ERROR" | "WRONG";
+}
+
+export type submitionOutput = {
+  inputs: string[],
+  expectedOutput: string,
+  output: string
 }
 
 type examples = {

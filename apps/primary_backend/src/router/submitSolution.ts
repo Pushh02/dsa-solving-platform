@@ -41,20 +41,75 @@ router.post("/run", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/submit", (req: Request, res: Response) => {});
+router.post("/submit", async(req: Request, res: Response) => {
+  const { lang, code, problemId, profileId } = req.body;
+
+  if (code === undefined || lang === undefined)
+    return res
+      .status(400)
+      .json({ success: false, error: "lang or code not provided" });
+
+  try {
+    const sqs = new SQS({
+      region: process.env.REGION,
+    });
+
+    const submitSol = await db.submitSolution.create({
+      data: {
+        problemId,
+        language: lang,
+        code,
+        output: {},
+        profileId,
+      },
+    });
+    await sqs.sendMessage({
+      QueueUrl: process.env.QUEUE_URL,
+      MessageBody: submitSol.id,
+      MessageGroupId: "submition",
+      MessageDeduplicationId: submitSol.id,
+    });
+
+    return res.send(submitSol.id);
+  } catch (err) {
+    res.json(err);
+  }
+});
 
 router.post("/check", async (req: Request, res: Response) => {
-  const solutionId = req.body.solutionId;
+  try{
+    const solutionId = req.body.solutionId;
+  
+    const solution = await db.runSubmission.findFirst({
+      where: {
+        id: solutionId,
+      },
+      include: {
+        problem: true,
+      },
+    });
+    res.json(solution);
+  } catch(err){
+    res.json(err);
+  }
+});
 
-  const solution = await db.runSubmission.findFirst({
-    where: {
-      id: solutionId,
-    },
-    include: {
-      problem: true,
-    },
-  });
-  res.json(solution);
+router.post("/checksubmission", async (req: Request, res: Response) => {
+  try{
+    const solutionId = req.body.solutionId;
+  
+    const solution = await db.submitSolution.findFirst({
+      where: {
+        id: solutionId,
+      },
+      include: {
+        problem: true,
+      },
+    });
+    res.json(solution);
+  } catch(err){
+    res.json(err);
+  }
 });
 
 export default router;

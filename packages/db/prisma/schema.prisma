@@ -34,6 +34,7 @@ model Profile {
   email    String @db.Text
 
   runSubmissions RunSubmission[]
+  submitSolution SubmitSolution[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -50,13 +51,14 @@ model Problem {
   topics           String[]
 
   runSubmissions RunSubmission[]
+  submitSolution SubmitSolution[]
 
   mainFunction Json
   defaultCode  Json
   codeHeaders  Json
 
   dryRunTestCases Json[]
-  // submitTestCases Int[]
+  submitTestCases Json[]
 
   @@index([title, difficulty])
 }
@@ -67,6 +69,24 @@ model RunSubmission {
   filepath String
   status   Status   @default(PENDING)
   output   String[]
+
+  profile   Profile @relation(fields: [profileId], references: [id])
+  profileId String
+
+  problem   Problem @relation(fields: [problemId], references: [id])
+  problemId String
+
+  submittedAt DateTime  @default(now())
+  startedAt   DateTime?
+  completedAt DateTime?
+}
+
+model SubmitSolution {
+  id       String   @id @default(uuid())
+  language String
+  code     String
+  status   Status   @default(PENDING)
+  output   Json
 
   profile   Profile @relation(fields: [profileId], references: [id])
   profileId String
