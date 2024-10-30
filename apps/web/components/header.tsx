@@ -1,12 +1,13 @@
 "use client";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { output, runCode, submitCode } from "@repo/store/submission";
+import { output, runCode, submitCode, submitOutput } from "@repo/store/submission";
 import { UserButton } from "@clerk/nextjs";
 
 const Header = () => {
   const [run, setRun] = useRecoilState(runCode);
   const [submit, setSubmit] = useRecoilState(submitCode);
   const setOutput = useSetRecoilState(output);
+  const setSubmissionOutput = useSetRecoilState(submitOutput)
 
   const handleRun = () => {
     if(!submit && !run){
@@ -16,6 +17,7 @@ const Header = () => {
   };
   const handleSubmit = () => {
     if(!submit && !run){
+      setSubmissionOutput("")
       setSubmit(true);
     }
   };

@@ -17,7 +17,9 @@ export interface DryRunTestCase {
 export type submitionOutput = {
   inputs: string[],
   expectedOutput: string,
-  output: string
+  output: string,
+  status: "Success" | "Error" | "Failed",
+  code: string
 }
 
 type examples = {

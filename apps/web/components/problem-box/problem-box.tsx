@@ -43,7 +43,7 @@ const ProblemBox = () => {
   //   router.replace("/");
 
   return (
-    <div className="h-[89vh] w-[47vw] border-[1px] rounded-lg border-slate-400 p-4 overflow-auto">
+    <div className="h-[89vh] w-[48.5vw] border-[1px] flex-none rounded-lg border-slate-400 p-4 overflow-auto">
       <h1 className="text-2xl font-semibold">{problemData?.title}</h1>
       <p className="text-xs mt-2">
       difficulty: 
@@ -52,7 +52,7 @@ const ProblemBox = () => {
           "ml-2",
           (problemData?.difficulty === Difficulty.Easy && "text-emerald-400") ||
           (problemData?.difficulty === Difficulty.Medium &&"text-yellow-500") ||
-          (problemData?.difficulty === Difficulty.Hard && "text-rose-500")
+          (problemData?.difficulty === Difficulty.Hard && "text-rose-400")
         )}
       >
         {problemData?.difficulty}

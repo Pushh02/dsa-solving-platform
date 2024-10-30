@@ -87,8 +87,6 @@ const Monaco = () => {
           count += 1;
         }, 700);
       }
-console.log(isSubmit)
-console.log(run)
       if (isSubmit === true) {
         if (user === null) return;
 
@@ -120,13 +118,13 @@ console.log(run)
             }
           );
           if (solutionStatus.data.status === "SUCCESS") {
-            console.log(solutionStatus.data.output)
+            setSubmitionOutput(solutionStatus.data.output)
             clearInterval(interval);
           } else if (solutionStatus.data.status === "ERROR") {
-            console.log(solutionStatus.data.output)
+            setSubmitionOutput(solutionStatus.data.output)
             clearInterval(interval);
           } else if (solutionStatus.data.status === "WRONG") {
-            console.log(solutionStatus.data.output)
+            setSubmitionOutput(solutionStatus.data.output)
             clearInterval(interval);
           }
 

@@ -4,7 +4,7 @@ import OutputBox from "./output-box";
 
 const SolutionBox = () => {
   return (
-    <div className="h-[89vh] w-[47vw] border-[1px] rounded-lg border-slate-400 pt-4">
+    <div className="h-[89vh] w-[48.5vw] border-[1px] flex-none rounded-lg border-slate-400 pt-4">
       <EditorHeader />
       <Monaco />
       <div className="overflow-auto h-[40%] m-2 rounded-md bg-zinc-800">

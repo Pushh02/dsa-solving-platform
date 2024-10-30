@@ -4,7 +4,7 @@ import { SQS } from "@aws-sdk/client-sqs";
 import fs from "fs";
 import { db } from "../db";
 import { generateFile } from "../lib/generateFile";
-import { languageSelect } from "@repo/db/src/types";
+import { languageSelect, submitionOutput } from "@repo/db/src/types";
 import { executeCpp } from "../lib/executeCpp";
 const router = Router();
 
@@ -44,7 +44,13 @@ router.post("/", async (req: Request, res: Response) => {
 
         //mapping the testcases object to run all the testcases on the code
         const testCases = sol.problem.submitTestCases as any;
-        let outputJson = {};
+        let outputJson: submitionOutput = {
+          inputs: [""],
+          expectedOutput: "",
+          output: "",
+          status: "Success",
+          code: sol.code
+        };
         let outputStatus = true;
 
         try {
@@ -67,22 +73,24 @@ router.post("/", async (req: Request, res: Response) => {
                 );
                 const output = await executeCpp(filepath);
 
-                  // Check if output matches expected output
-                  if (output.stdout !== testCase.testCase.output) {
-                    outputJson = {
-                      inputs: testCase.testCase.inputs,
-                      expectedOutput: testCase.testCase.output,
-                      output: output.stdout,
-                    };
-                    outputStatus = false;
-                    throw { outputStatus, outputJson }; // Early exit on failure
-                  }
+                // Check if output matches expected output
+                if (output.stdout !== testCase.testCase.output) {
+                  outputJson = {
+                    inputs: testCase.testCase.inputs,
+                    expectedOutput: testCase.testCase.output,
+                    output: output.stdout,
+                    status: "Failed",
+                    code: sol.code
+                  };
+                  outputStatus = false;
+                  throw { outputStatus, outputJson }; // Early exit on failure
+                }
 
-                  // Cleanup files
-                  await fs.promises.unlink(filepath);
-                  if (output.outPath) {
-                    await fs.promises.unlink(output.outPath);
-                  }
+                // Cleanup files
+                await fs.promises.unlink(filepath);
+                if (output.outPath) {
+                  await fs.promises.unlink(output.outPath);
+                }
               })
             ).catch((err) => {
               outputStatus = err.outputStatus;

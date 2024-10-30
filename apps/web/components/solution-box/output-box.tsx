@@ -20,7 +20,6 @@ const OutputBox = () => {
       setIsLoading(true);
     } else {
       setIsLoading(false);
-      console.log(typeof outputVal)
     }
   }, [outputVal]);
 
