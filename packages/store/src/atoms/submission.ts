@@ -1,9 +1,10 @@
-import { CurrentTab, ProblemSchema, submitionOutput } from "@repo/db/types";
+import { Status } from "@prisma/client";
+import { CurrentTab, ProblemSchema, submissionOutput } from "@repo/db/types";
 import { atom } from "recoil";
 
 interface OutputInterface {
   output: string[];
-  status: "SUCCESS" | "ERROR" | "WRONG";
+  status: Status;
 }
 
 export const runCode = atom({
@@ -18,7 +19,7 @@ export const submitCode = atom({
 
 export const submitOutput = atom({
   key: "submitOutput",
-  default: "" as string | submitionOutput,
+  default: "" as string | submissionOutput,
 });
 
 export const language = atom({

@@ -14,10 +14,10 @@ datasource db {
 }
 
 enum Status {
-  SUCCESS
-  PENDING
-  ERROR
-  WRONG
+  Success
+  Pending
+  Error
+  Failed
 }
 
 enum Difficulty {
@@ -67,7 +67,7 @@ model RunSubmission {
   id       String   @id @default(uuid())
   language String
   filepath String
-  status   Status   @default(PENDING)
+  status   Status   @default(Pending)
   output   String[]
 
   profile   Profile @relation(fields: [profileId], references: [id])
@@ -85,7 +85,7 @@ model SubmitSolution {
   id       String   @id @default(uuid())
   language String
   code     String
-  status   Status   @default(PENDING)
+  status   Status   @default(Pending)
   output   Json
 
   profile   Profile @relation(fields: [profileId], references: [id])

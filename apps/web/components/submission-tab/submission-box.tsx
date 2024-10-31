@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
-import { submitionOutput } from "@repo/db/types";
+import { Status } from "@prisma/client";
+import { submissionOutput } from "@repo/db/types";
 import { currentProblem, submitOutput } from "@repo/store/submission";
 import { useRecoilValue } from "recoil";
 
@@ -8,13 +9,13 @@ const SubmissionBox = () => {
   const submissionOutput = useRecoilValue(submitOutput);
 
   // Check if submission is pending
-  const isPending = submissionOutput === "PENDING";
+  const isPending = submissionOutput === Status.Pending;
 
   // Parse submission output if it's a JSON string
-  const parsedOutput: submitionOutput = (() => {
+  const parsedOutput: submissionOutput = (() => {
     if (typeof submissionOutput === "string") {
       try {
-        if (submissionOutput === "PENDING") return null;
+        if (submissionOutput === Status.Pending) return null;
         return JSON.parse(submissionOutput);
       } catch {
         return null;
@@ -24,7 +25,7 @@ const SubmissionBox = () => {
   })();
 
   // Determine submission status
-  const isSuccess = isPending ? null : parsedOutput && parsedOutput.status === "Success" ? true : false;
+  const isSuccess = isPending ? null : parsedOutput && parsedOutput.status === Status.Success ? true : false;
 
   return (
     <div className="h-[89vh] w-[47vw] border-[1px] flex-none rounded-lg border-slate-400 p-4 overflow-auto mr-2">

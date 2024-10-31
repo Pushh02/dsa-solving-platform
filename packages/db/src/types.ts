@@ -1,5 +1,4 @@
-import { Difficulty } from "@prisma/client";
-import { JsonValue } from "@prisma/client/runtime/library";
+import { Difficulty, Status } from "@prisma/client";
 
 export interface TestCase {
   testCase: {
@@ -11,14 +10,14 @@ export interface TestCase {
 export interface DryRunTestCase {
   expectedOutput: TestCase[];
   output: string;
-  status: "SUCCESS" | "ERROR" | "WRONG";
+  status: Status;
 }
 
 export type submissionOutput = {
   inputs: string[],
   expectedOutput: string,
   output: string,
-  status: "SUCCESS" | "ERROR" | "FAILED",
+  status: Status,
   code: string
 }
 

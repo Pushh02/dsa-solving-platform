@@ -2,6 +2,7 @@
 
 import { useUser } from "@clerk/nextjs";
 import Editor from "@monaco-editor/react";
+import { Status } from "@prisma/client";
 import {
   language,
   output,
@@ -38,7 +39,7 @@ const Monaco = () => {
 
         const code = showValue();
         setRun(false);
-        setOutput("PENDING");
+        setOutput(Status.Pending);
 
         let solutionId: string;
         axios
@@ -63,24 +64,24 @@ const Monaco = () => {
               solutionId,
             }
           );
-          if (solutionStatus.data.status === "SUCCESS") {
+          if (solutionStatus.data.status === Status.Success) {
             setOutput({
               output: solutionStatus.data.output,
-              status: "SUCCESS",
+              status: Status.Success,
             });
             clearInterval(interval);
-          } else if (solutionStatus.data.status === "ERROR") {
-            setOutput({ output: solutionStatus.data.output, status: "ERROR" });
+          } else if (solutionStatus.data.status === Status.Error) {
+            setOutput({ output: solutionStatus.data.output, status: Status.Error });
             clearInterval(interval);
-          } else if (solutionStatus.data.status === "WRONG") {
-            setOutput({ output: solutionStatus.data.output, status: "WRONG" });
+          } else if (solutionStatus.data.status === Status.Failed) {
+            setOutput({ output: solutionStatus.data.output, status: Status.Error });
             clearInterval(interval);
           }
 
           if (count >= 9) {
             setOutput({
               output: ["Time Limit Exceeded - Too slow lil bro"],
-              status: "ERROR",
+              status: Status.Error,
             });
             clearInterval(interval);
           }
@@ -92,7 +93,7 @@ const Monaco = () => {
 
         const code = showValue();
         setIsSubmit(false);
-        setSubmitionOutput("PENDING");
+        setSubmitionOutput(Status.Pending);
 
         let solutionId: string;
         axios
@@ -117,13 +118,13 @@ const Monaco = () => {
               solutionId,
             }
           );
-          if (solutionStatus.data.status === "SUCCESS") {
+          if (solutionStatus.data.status === Status.Success) {
             setSubmitionOutput(solutionStatus.data.output)
             clearInterval(interval);
-          } else if (solutionStatus.data.status === "ERROR") {
+          } else if (solutionStatus.data.status === Status.Error) {
             setSubmitionOutput(solutionStatus.data.output)
             clearInterval(interval);
-          } else if (solutionStatus.data.status === "WRONG") {
+          } else if (solutionStatus.data.status === Status.Failed) {
             setSubmitionOutput(solutionStatus.data.output)
             clearInterval(interval);
           }
@@ -131,7 +132,7 @@ const Monaco = () => {
           if (count >= 9) {
             setOutput({
               output: ["Time Limit Exceeded - Too slow lil bro"],
-              status: "ERROR",
+              status: Status.Error,
             });
             clearInterval(interval);
           }

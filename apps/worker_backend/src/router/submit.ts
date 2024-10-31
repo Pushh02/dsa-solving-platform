@@ -6,6 +6,7 @@ import { db } from "../db";
 import { generateFile } from "../lib/generateFile";
 import { languageSelect, submissionOutput } from "@repo/db/src/types";
 import { executeCpp } from "../lib/executeCpp";
+import { Status } from "@prisma/client";
 const router = Router();
 
 router.post("/", async (req: Request, res: Response) => {
@@ -48,8 +49,8 @@ router.post("/", async (req: Request, res: Response) => {
           inputs: [""],
           expectedOutput: "",
           output: "",
-          status: "SUCCESS",
-          code: sol.code
+          status: "Success",
+          code: sol.code,
         };
         let outputStatus = true;
 
@@ -79,8 +80,8 @@ router.post("/", async (req: Request, res: Response) => {
                     inputs: testCase.testCase.inputs,
                     expectedOutput: testCase.testCase.output,
                     output: output.stdout,
-                    status: "FAILED",
-                    code: sol.code
+                    status: "Failed",
+                    code: sol.code,
                   };
                   outputStatus = false;
                   throw { outputStatus, outputJson }; // Early exit on failure
@@ -95,7 +96,7 @@ router.post("/", async (req: Request, res: Response) => {
             ).catch((err) => {
               outputStatus = err.outputStatus;
               outputJson = err.outputJson;
-            })
+            });
 
             return { outputStatus, outputJson };
           };
@@ -117,7 +118,7 @@ router.post("/", async (req: Request, res: Response) => {
               },
               data: {
                 output: JSON.stringify(finalOutput),
-                status: "SUCCESS",
+                status: Status.Success,
                 completedAt: new Date(Date.now()),
               },
             });
@@ -135,7 +136,7 @@ router.post("/", async (req: Request, res: Response) => {
               },
               data: {
                 output: JSON.stringify(finalOutput),
-                status: "WRONG",
+                status: Status.Failed,
                 completedAt: new Date(Date.now()),
               },
             });
@@ -158,7 +159,7 @@ router.post("/", async (req: Request, res: Response) => {
               id: solutionId,
             },
             data: {
-              status: "ERROR",
+              status: Status.Error,
               output: [errorMessage],
               completedAt: new Date(Date.now()),
             },
@@ -178,7 +179,7 @@ router.post("/", async (req: Request, res: Response) => {
             id: solutionId,
           },
           data: {
-            status: "ERROR",
+            status: Status.Error,
             output: ["internal error"],
             completedAt: new Date(Date.now()),
           },

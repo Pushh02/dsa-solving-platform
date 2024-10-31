@@ -6,6 +6,7 @@ import { db } from "../db";
 import { generateFile } from "../lib/generateFile";
 import { languageSelect } from "@repo/db/src/types";
 import { executeCpp } from "../lib/executeCpp";
+import { Status } from "@prisma/client";
 
 const router = Router();
 
@@ -98,7 +99,7 @@ router.post("/", async (req: Request, res: Response) => {
               },
               data: {
                 output: finalOutput,
-                status: "SUCCESS",
+                status: Status.Success,
                 completedAt: new Date(Date.now()),
               },
             });
@@ -116,7 +117,7 @@ router.post("/", async (req: Request, res: Response) => {
               },
               data: {
                 output: finalOutput,
-                status: "WRONG",
+                status: Status.Failed,
                 completedAt: new Date(Date.now()),
               },
             });
@@ -139,7 +140,7 @@ router.post("/", async (req: Request, res: Response) => {
               id: solutionId,
             },
             data: {
-              status: "ERROR",
+              status: Status.Error,
               output: [errorMessage],
               completedAt: new Date(Date.now()),
             },
@@ -159,7 +160,7 @@ router.post("/", async (req: Request, res: Response) => {
             id: solutionId,
           },
           data: {
-            status: "ERROR",
+            status: Status.Error,
             output: ["internal error"],
             completedAt: new Date(Date.now()),
           },

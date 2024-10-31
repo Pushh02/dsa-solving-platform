@@ -4,6 +4,7 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { currentProblem, output } from "@repo/store/submission";
 import TestCaseBoxDetails from "./testcase-box-details";
+import { Status } from "@prisma/client";
 
 const OutputBox = () => {
   const outputVal = useRecoilValue(output);
@@ -16,7 +17,7 @@ const OutputBox = () => {
   } | null>(null);
   
   useEffect(() => {
-    if (outputVal === "PENDING") {
+    if (outputVal === Status.Pending) {
       setIsLoading(true);
     } else {
       setIsLoading(false);
@@ -78,7 +79,7 @@ const OutputBox = () => {
       <p
         className={cn(
           "text-md ml-2 mb-2 font-semibold",
-          typeof outputVal === "object" && outputVal.status === "SUCCESS"
+          typeof outputVal === "object" && outputVal.status === Status.Success
             ? "text-emerald-400"
             : "text-rose-400"
         )}

@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { Status } from "@prisma/client";
 import { submissionOutput } from "@repo/db/types";
 
 interface SubmissionDetailsProps {
@@ -11,7 +12,7 @@ const SubmissionDetails = ({ submission }: SubmissionDetailsProps) => {
       <h3
         className={cn(
           "text-xl",
-          submission.status === "SUCCESS"
+          submission.status === Status.Success
             ? "text-emerald-500"
             : "text-rose-500"
         )}

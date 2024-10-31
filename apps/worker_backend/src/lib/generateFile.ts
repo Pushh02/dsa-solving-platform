@@ -5,11 +5,6 @@ import { v4 as uuid } from "uuid";
 
 const dirCodes = path.join(__dirname, "codes");
 
-const headers = `#include<iostream>
-#include<bits/stdc++.h>
-using namespace std;
-`;
-
 if (!fs.existsSync(dirCodes)) {
   fs.mkdirSync(dirCodes, { recursive: true });
 }
