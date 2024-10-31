@@ -18,7 +18,8 @@ export type submissionOutput = {
   expectedOutput: string,
   output: string,
   status: Status,
-  code: string
+  code: string,
+  executionTime: number | null
 }
 
 export type CurrentTab = "problem" | "solution" | "submission"

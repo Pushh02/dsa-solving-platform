@@ -51,8 +51,10 @@ router.post("/", async (req: Request, res: Response) => {
           output: "",
           status: "Success",
           code: sol.code,
+          executionTime: null,
         };
         let outputStatus = true;
+        const executionTimes: number[] = []; // to track the execution time of each testcase
 
         try {
           const timeoutPromise = new Promise((_, reject) => {
@@ -65,6 +67,7 @@ router.post("/", async (req: Request, res: Response) => {
             await Promise.all(
               //@ts-ignore
               testCases.map(async (testCase) => {
+                
                 const filepath = await generateFile(
                   sol.language,
                   sol.code,
@@ -72,7 +75,11 @@ router.post("/", async (req: Request, res: Response) => {
                   sol.problem.codeHeaders as languageSelect,
                   testCase.testCase.inputs
                 );
+                const startTime = Date.now();
                 const output = await executeCpp(filepath);
+
+                const endTime = Date.now();
+                executionTimes.push(endTime - startTime);
 
                 // Check if output matches expected output
                 if (output.stdout !== testCase.testCase.output) {
@@ -81,6 +88,7 @@ router.post("/", async (req: Request, res: Response) => {
                     expectedOutput: testCase.testCase.output,
                     output: output.stdout,
                     status: "Failed",
+                    executionTime: null,
                     code: sol.code,
                   };
                   outputStatus = false;
@@ -105,6 +113,12 @@ router.post("/", async (req: Request, res: Response) => {
             executionPromise(),
             timeoutPromise,
           ]);
+
+          const averageExecutionTime =
+            executionTimes.reduce((sum, time) => sum + time, 0) /
+            executionTimes.length;
+
+          outputJson.executionTime = averageExecutionTime;
 
           // Type assertion to access the result properties
           const { outputStatus: finalStatus, outputJson: finalOutput } =
