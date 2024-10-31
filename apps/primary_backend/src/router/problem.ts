@@ -3,29 +3,29 @@ import { db } from "../db";
 
 const router = Router();
 
-router.get("/", async(req: Request, res: Response) =>{
-  try{
+router.get("/", async (req: Request, res: Response) => {
+  try {
     const problems = await db.problem.findMany();
     res.send(problems);
-  } catch(err){
+  } catch (err) {
     res.send(err);
-    console.log(err)
+    console.log(err);
   }
-})
+});
 
-router.get("/get", async(req: Request, res: Response) =>{
-    try{
-        const title = req.query.title;
-        const problem = await db.problem.findFirst({
-            where: {
-                title: title as string,
-            }
-        });
-        res.send(problem);
-    } catch (err){
-        res.send(err);
-    }
-})
+router.get("/get", async (req: Request, res: Response) => {
+  try {
+    const title = req.query.title;
+    const problem = await db.problem.findFirst({
+      where: {
+        title: title as string,
+      },
+    });
+    res.send(problem);
+  } catch (err) {
+    res.send(err);
+  }
+});
 
 router.post("/post", async (req: Request, res: Response) => {
   try {
@@ -41,7 +41,7 @@ router.post("/post", async (req: Request, res: Response) => {
         mainFunction: req.body.mainFunction,
         codeHeaders: req.body.codeHeaders,
         defaultCode: req.body.defaultCode,
-        s: req.body.dryRunTestCases,
+        dryRunTestCases: req.body.dryRunTestCases,
         submitTestCases: req.body.submitTestCases,
       },
     });
@@ -52,5 +52,21 @@ router.post("/post", async (req: Request, res: Response) => {
   }
 });
 
+router.post("/getsubmission", async (req: Request, res: Response) => {
+  const { profileId, problemId } = req.body;
+  const submissions = await db.profile.findFirst({
+    where: {
+      id: profileId,
+    },
+    include: {
+      submitSolution: {
+        where: {
+          problemId: problemId,
+        }
+      },
+    },
+  })
+  res.send(submissions);
+});
 
 export default router;

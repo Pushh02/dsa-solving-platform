@@ -14,13 +14,15 @@ export interface DryRunTestCase {
   status: "SUCCESS" | "ERROR" | "WRONG";
 }
 
-export type submitionOutput = {
+export type submissionOutput = {
   inputs: string[],
   expectedOutput: string,
   output: string,
-  status: "Success" | "Error" | "Failed",
+  status: "SUCCESS" | "ERROR" | "FAILED",
   code: string
 }
+
+export type CurrentTab = "problem" | "solution" | "submission"
 
 type examples = {
   example: {

@@ -14,7 +14,7 @@ export default function Home() {
   const submissionOutput = useRecoilValue(submitOutput);
   const [isOpen, setIsOpen] = useState(true);
   useEffect(() => {
-    console.log(submissionOutput);
+    setIsOpen(true)
   }, [submissionOutput]);
   return (
     <div className="h-screen w-screen overflow-hidden">

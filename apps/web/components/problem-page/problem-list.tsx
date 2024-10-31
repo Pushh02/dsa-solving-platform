@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Difficulty } from "@prisma/client";
-import { ProblemSchema } from "";
+import { ProblemSchema } from "@repo/db/types";
 import Link from "next/link";
 import { use } from "react";
 
@@ -14,7 +14,6 @@ async function getProblems(): Promise<ProblemSchema[]> {
     throw new Error('Failed to fetch problems');
   }
   
-  setTimeout(()=>{}, 5000)
   return res.json();
 }
 const ProblemList = () => {

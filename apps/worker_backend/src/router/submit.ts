@@ -4,7 +4,7 @@ import { SQS } from "@aws-sdk/client-sqs";
 import fs from "fs";
 import { db } from "../db";
 import { generateFile } from "../lib/generateFile";
-import { languageSelect, submitionOutput } from "@repo/db/src/types";
+import { languageSelect, submissionOutput } from "@repo/db/src/types";
 import { executeCpp } from "../lib/executeCpp";
 const router = Router();
 
@@ -44,11 +44,11 @@ router.post("/", async (req: Request, res: Response) => {
 
         //mapping the testcases object to run all the testcases on the code
         const testCases = sol.problem.submitTestCases as any;
-        let outputJson: submitionOutput = {
+        let outputJson: submissionOutput = {
           inputs: [""],
           expectedOutput: "",
           output: "",
-          status: "Success",
+          status: "SUCCESS",
           code: sol.code
         };
         let outputStatus = true;
@@ -79,7 +79,7 @@ router.post("/", async (req: Request, res: Response) => {
                     inputs: testCase.testCase.inputs,
                     expectedOutput: testCase.testCase.output,
                     output: output.stdout,
-                    status: "Failed",
+                    status: "FAILED",
                     code: sol.code
                   };
                   outputStatus = false;

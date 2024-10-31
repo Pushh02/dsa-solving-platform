@@ -1,4 +1,4 @@
-import { ProblemSchema, submitionOutput } from "@repo/db/types";
+import { CurrentTab, ProblemSchema, submitionOutput } from "@repo/db/types";
 import { atom } from "recoil";
 
 interface OutputInterface {
@@ -35,3 +35,8 @@ export const currentProblem = atom({
   key: "currentProblem",
   default: {} as ProblemSchema,
 });
+
+export const currentTab = atom({
+  key: "currentTab",
+  default: "problem" as CurrentTab
+})

@@ -1,22 +1,24 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { Difficulty } from "@prisma/client";
 import { ProblemSchema } from "@repo/db/types";
-import { currentProblem } from "@repo/store/submission";
+import { currentProblem, currentTab } from "@repo/store/submission";
 import axios from "axios";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import ProblemHeader from "./problem-header";
+import ProblemTab from "./problem-tab";
+import SubmissionTab from "./submission-tab";
 
 const ProblemBox = () => {
   const [problemData, setproblemData] = useState<ProblemSchema>();
   const setProblem = useSetRecoilState(currentProblem);
+  const crntTab = useRecoilValue(currentTab);
   const router = useRouter();
   const url = usePathname();
-  const split = url.split("/")
+  const split = url.split("/");
   //@ts-ignore
-  const title = (decodeURIComponent(split[split.length-1]))
+  const title = decodeURIComponent(split[split.length - 1]);
 
   useEffect(() => {
     axios
@@ -43,43 +45,13 @@ const ProblemBox = () => {
   //   router.replace("/");
 
   return (
-    <div className="h-[89vh] w-[48.5vw] border-[1px] flex-none rounded-lg border-slate-400 p-4 overflow-auto">
-      <h1 className="text-2xl font-semibold">{problemData?.title}</h1>
-      <p className="text-xs mt-2">
-      difficulty: 
-      <span
-        className={cn(
-          "ml-2",
-          (problemData?.difficulty === Difficulty.Easy && "text-emerald-400") ||
-          (problemData?.difficulty === Difficulty.Medium &&"text-yellow-500") ||
-          (problemData?.difficulty === Difficulty.Hard && "text-rose-400")
-        )}
-      >
-        {problemData?.difficulty}
-      </span>
-      </p>
-      <div className="text-[#d1d1d1] text-sm mt-2">
-        <p className="leading-9">{problemData?.description}</p>
-        <div>
-          <p className="text-lg mb-2 font-medium text-white">inputs</p>
-          {problemData?.examples.map((example) => {
-            return (
-              <div className="leading-7 mb-2">
-                <p>{example.example.input}</p>
-                <p>{example.example.output}</p>
-              </div>
-            );
-          })}
-        </div>
-        <div>
-          <p className="text-lg my-2 font-medium text-white"> Constraints: </p>
-          {problemData?.constraints.map((constraints) => {
-            return <p className="leading-7">{constraints}</p>;
-          })}
-          <br />
-        </div>
-        <p>{problemData?.followUpQuestion}</p>
-      </div>
+    <div className="h-[89vh] w-[48.5vw] border-[1px] flex-none rounded-lg border-slate-400 overflow-auto">
+      <ProblemHeader />
+      {crntTab === "problem" ? (
+        <ProblemTab problemData={problemData} />
+      ) : crntTab === "submission" ? (
+        <SubmissionTab />
+      ) : null}
     </div>
   );
 };

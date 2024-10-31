@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils";
 import { submitionOutput } from "@repo/db/types";
 import { currentProblem, submitOutput } from "@repo/store/submission";
-import { useEffect } from "react";
 import { useRecoilValue } from "recoil";
 
 const SubmissionBox = () => {
