@@ -1,16 +1,16 @@
 import { useUser } from "@clerk/nextjs";
-import { submissionOutput } from "@repo/db/types";
 import { currentProblem, submitCode } from "@repo/store/submission";
 import axios from "axios";
-import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import SubmissionDetails from "./submission-details";
+import { SubmitSolution } from "@prisma/client";
+import ProblemLoading from "../problem-page/problem-loading";
 
 const SubmissionTab = () => {
   const { isSignedIn, user } = useUser();
   const curProblem = useRecoilValue(currentProblem);
-  const [submissions, setSubmissions] = useState<submissionOutput[]>([]);
+  const [submissions, setSubmissions] = useState<SubmitSolution[]>();
   useEffect(() => {
     if (isSignedIn) {
       if (user === null) return;
@@ -27,16 +27,18 @@ const SubmissionTab = () => {
           console.log(error);
         });
     }
-    console.log(submissions);
   }, []);
   return (
     <div className="p-4">
-      {submissions.map((submission, index) => {
-        return <SubmissionDetails submission={submission} key={index} />;
-      })}
+      {submissions ? (
+        submissions.map((submission, index) => {
+          return <SubmissionDetails submission={submission} key={index} />;
+        })
+      ) : (
+        <ProblemLoading />
+      )}
     </div>
   );
 };
 
-// export default dynamic(() => Promise.resolve(SubmissionTab));
 export default SubmissionTab;
