@@ -38,7 +38,6 @@ const Monaco = () => {
         if (user === null) return;
 
         const code = showValue();
-        setRun(false);
         setOutput(Status.Pending);
 
         let solutionId: string;
@@ -69,12 +68,15 @@ const Monaco = () => {
               output: solutionStatus.data.output,
               status: Status.Success,
             });
+            setTimeout(() => setRun(false), 2000);
             clearInterval(interval);
           } else if (solutionStatus.data.status === Status.Error) {
             setOutput({ output: solutionStatus.data.output, status: Status.Error });
+            setTimeout(() => setRun(false), 2000);
             clearInterval(interval);
           } else if (solutionStatus.data.status === Status.Failed) {
             setOutput({ output: solutionStatus.data.output, status: Status.Error });
+            setTimeout(() => setRun(false), 2000);
             clearInterval(interval);
           }
 
@@ -83,6 +85,7 @@ const Monaco = () => {
               output: ["Time Limit Exceeded - Too slow lil bro"],
               status: Status.Error,
             });
+            setTimeout(() => setRun(false), 2000);
             clearInterval(interval);
           }
           count += 1;
@@ -92,7 +95,6 @@ const Monaco = () => {
         if (user === null) return;
 
         const code = showValue();
-        setIsSubmit(false);
         setSubmitionOutput(Status.Pending);
 
         let solutionId: string;
@@ -120,12 +122,15 @@ const Monaco = () => {
           );
           if (solutionStatus.data.status === Status.Success) {
             setSubmitionOutput(solutionStatus.data.output)
+            setTimeout(() => setIsSubmit(false), 2000);
             clearInterval(interval);
           } else if (solutionStatus.data.status === Status.Error) {
             setSubmitionOutput(solutionStatus.data.output)
+            setTimeout(() => setIsSubmit(false), 2000);
             clearInterval(interval);
           } else if (solutionStatus.data.status === Status.Failed) {
             setSubmitionOutput(solutionStatus.data.output)
+            setTimeout(() => setIsSubmit(false), 2000);
             clearInterval(interval);
           }
 
@@ -134,6 +139,7 @@ const Monaco = () => {
               output: ["Time Limit Exceeded - Too slow lil bro"],
               status: Status.Error,
             });
+            setTimeout(() => setIsSubmit(false), 2000);
             clearInterval(interval);
           }
           count += 1;

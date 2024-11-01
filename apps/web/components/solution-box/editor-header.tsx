@@ -38,7 +38,7 @@ const EditorHeader = () => {
           >
             c++
           </DropdownMenuItem>
-          <DropdownMenuItem
+          {/* <DropdownMenuItem
             onClick={() => {
               setLang("java");
             }}
@@ -61,7 +61,7 @@ const EditorHeader = () => {
             className="hover:bg-[#202020] cursor-pointer"
           >
             javascript
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

@@ -6,7 +6,7 @@ import { use } from "react";
 
 async function getProblems(): Promise<ProblemSchema[]> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/problem`, {
-    cache: 'force-cache',
+    // cache: 'force-cache',
     // cache: 'no-store'
   });
   
@@ -19,11 +19,12 @@ async function getProblems(): Promise<ProblemSchema[]> {
 const ProblemList = () => {
   const problems = use(getProblems());
   return (
-    <div>
+    <div className="overflow-auto">
       {problems.length > 0 &&
         problems.map((problem) => {
           return (
             <Link
+              key={problem.id}
               href={{pathname: `/problem/${problem.title}`}}
               className="w-full h-14 flex items-center px-6 cursor-pointer rounded-md mb-4 bg-zinc-700/40 hover:bg-zinc-700/60"
             >

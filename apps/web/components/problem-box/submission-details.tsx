@@ -25,7 +25,7 @@ const SubmissionDetails = ({ submission }: SubmissionDetailsProps) => {
   return (
     <div
       onClick={() => setSubmissionValue(output)}
-      className="w-[95%] h-16 grid grid-cols-3 bg-zinc-800 hover:bg-zinc-700/70 transition-all rounded-md mx-auto mb-2 p-2"
+      className="w-[95%] h-16 grid grid-cols-3 bg-zinc-800 hover:bg-zinc-700/70 transition-all rounded-md cursor-default mx-auto mb-2 p-2"
     >
       <div>
         <h3

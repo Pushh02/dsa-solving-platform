@@ -24,7 +24,7 @@ const Header = () => {
 
   return (
     <nav className="flex text-white w-screen h-[9vh] bg-[#222222] px-2 items-center justify-between">
-      <p className="text-3xl ml-4 text-customGreen font-semibold">CG</p>
+      <p className="text-3xl ml-4 text-customGreen cursor-default font-semibold">CG</p>
 
       <div className="flex items-center justify-around w-fit h-fit border-gray-500 rounded-lg border-2">
         <div

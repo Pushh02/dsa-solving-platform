@@ -102,7 +102,7 @@ const OutputBox = () => {
               }
               className="h-7 w-20 rounded-lg bg-zinc-600 cursor-pointer"
             >
-              <p className="flex items-center justify-center h-full text-sm">
+              <p className="flex items-center cursor-default justify-center h-full text-sm">
                 Case {index + 1}
               </p>
             </div>

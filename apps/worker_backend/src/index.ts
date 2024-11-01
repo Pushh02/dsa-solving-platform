@@ -12,12 +12,12 @@ app.use(express.json());
 app.use("/run", runRoute);
 app.use("/submit", submitRoute);
 
-setInterval(async () => {
-  try {
-    const sqs = new SQS({
-      region: process.env.REGION,
-    });
+try {
+  const sqs = new SQS({
+    region: process.env.REGION,
+  });
 
+  setInterval(async () => {
     const msg = await sqs.receiveMessage({
       QueueUrl: process.env.QUEUE_URL,
       AttributeNames: ["All"], // Request all message attributes
@@ -31,8 +31,8 @@ setInterval(async () => {
         method: "POST",
         body: JSON.stringify({ msg }),
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       });
     } else if (
       msg.Messages &&
@@ -42,16 +42,16 @@ setInterval(async () => {
         method: "POST",
         body: JSON.stringify({ msg }),
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       });
     } else {
       console.log("no message available");
     }
-  } catch (err) {
-    console.log(err);
-  }
-}, 5000);
+  }, 5000);
+} catch (err) {
+  console.log(err);
+}
 
 app.listen(process.env.PORT, () => {
   console.log("started on port", process.env.PORT);
