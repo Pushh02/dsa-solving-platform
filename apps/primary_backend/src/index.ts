@@ -2,8 +2,6 @@ import express from "express";
 import "dotenv/config";
 import cors from "cors";
 
-import { db } from "./db";
-
 import problemRoute from "./router/problem";
 import solution from "./router/submitSolution";
 

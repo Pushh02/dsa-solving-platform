@@ -1,12 +1,18 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import { Status } from "@prisma/client";
 import { submissionOutput } from "@repo/db/types";
 import { currentProblem, submitOutput } from "@repo/store/submission";
+import { Check, Copy } from "lucide-react";
+import { useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
 
 const SubmissionBox = () => {
   const problem = useRecoilValue(currentProblem);
   const submissionOutput = useRecoilValue(submitOutput);
+
+  const [isCopied, setIsCopied] = useState(false);
 
   // Check if submission is pending
   const isPending = submissionOutput === Status.Pending;
@@ -25,7 +31,24 @@ const SubmissionBox = () => {
   })();
 
   // Determine submission status
-  const isSuccess = isPending ? null : parsedOutput && parsedOutput.status === Status.Success ? true : false;
+  const isSuccess = isPending
+    ? null
+    : parsedOutput && parsedOutput.status === Status.Success
+      ? true
+      : false;
+
+  const copyCode = () => {
+    const range = document.createRange();
+    //@ts-ignore
+    range.selectNode(document.getElementById("code"));
+    window.getSelection()?.removeAllRanges(); // clear current selection
+    window.getSelection()?.addRange(range); // to select text
+    document.execCommand("copy");
+    window.getSelection()?.removeAllRanges();
+
+    setIsCopied(true)
+    setTimeout(()=>setIsCopied(false), 2000)
+  };
 
   return (
     <div className="h-[89vh] w-[47vw] border-[1px] flex-none rounded-lg border-slate-400 p-4 overflow-auto mr-2">
@@ -74,15 +97,26 @@ const SubmissionBox = () => {
               <h3 className="text-lg font-medium text-[#e2e2e2] mb-2">
                 Test Results
               </h3>
-              <p className="text-sm text-[#d1d1d1]">All tests passed successfully!</p>
+              <p className="text-sm text-[#d1d1d1]">
+                All tests passed successfully!
+              </p>
             </div>
           )}
 
-          <div className="w-full p-4 border-[1px] border-zinc-500 rounded-md">
+          <div className="w-full p-4 border-[1px] border-zinc-500 rounded-md relative">
             <h3 className="text-lg font-medium text-[#e2e2e2] mb-2">
               Your Code
             </h3>
-            <pre className="text-sm text-[#d1d1d1] whitespace-pre-wrap">
+            <button
+              onClick={copyCode}
+              className="absolute right-4 top-4 p-1 border-[1px] border-zinc-600 rounded-lg"
+            >
+              {isCopied ? <Check className="h-4 w-4"/> : <Copy className="h-4 w-4"/>}
+            </button>
+            <pre
+              id="code"
+              className="text-sm text-[#d1d1d1] whitespace-pre-wrap"
+            >
               {parsedOutput.code}
             </pre>
           </div>

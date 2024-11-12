@@ -1,7 +1,9 @@
 import { languageSelect } from "@repo/db/src/types";
 import * as fs from "fs";
 import path from "path";
+import {exec} from "child_process"
 import { v4 as uuid } from "uuid";
+import executeCommand from "../utils/command";
 
 const dirCodes = path.join(__dirname, "codes");
 
@@ -27,10 +29,22 @@ const generateFile = async (
       modifiedMainFunction = modifiedMainFunction.replace("<<input>>", input);
     });
   
+    try {
+      await executeCommand(
+        `docker start ubuntutest && docker exec ubuntutest sh -c "cd /cg && touch ${filename}"`
+      );
+      await executeCommand(
+        `docker start ubuntutest && docker exec ubuntutest sh -c "cd /cg && echo '${codeHeaders.cpp + content + modifiedMainFunction}' >> ${filename}"`
+      );
+    } catch (error) {
+      console.error("Error executing Docker command:", error);
+      throw new Error("Failed to execute Docker command");
+    }
+
     fs.appendFileSync(filepath, codeHeaders.cpp);
     fs.appendFileSync(filepath, content);
     fs.appendFileSync(filepath, modifiedMainFunction);
-  
+    
     return filepath;
   } else {
     throw new Error("invalid language");
