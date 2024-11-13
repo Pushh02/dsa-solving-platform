@@ -28,18 +28,6 @@ const generateFile = async (
     inputs.map((input: string) => {
       modifiedMainFunction = modifiedMainFunction.replace("<<input>>", input);
     });
-  
-    try {
-      await executeCommand(
-        `docker start ubuntutest && docker exec ubuntutest sh -c "cd /cg && touch ${filename}"`
-      );
-      await executeCommand(
-        `docker start ubuntutest && docker exec ubuntutest sh -c "cd /cg && echo '${codeHeaders.cpp + content + modifiedMainFunction}' >> ${filename}"`
-      );
-    } catch (error) {
-      console.error("Error executing Docker command:", error);
-      throw new Error("Failed to execute Docker command");
-    }
 
     fs.appendFileSync(filepath, codeHeaders.cpp);
     fs.appendFileSync(filepath, content);

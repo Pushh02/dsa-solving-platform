@@ -62,6 +62,9 @@ router.post("/getsubmission", async (req: Request, res: Response) => {
       submitSolution: {
         where: {
           problemId: problemId,
+        },
+        orderBy: {
+          completedAt: 'desc'
         }
       },
     },
