@@ -98,3 +98,7 @@ model SubmitSolution {
   startedAt   DateTime?
   completedAt DateTime?
 }
+
+model Post{
+  id String @id @default(uuid())
+}
