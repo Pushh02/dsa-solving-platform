@@ -44,6 +44,7 @@ const Monaco = () => {
         axios
           .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/compile/run`, {
             problemId: prob.id,
+            problemTitle: prob.title,
             code,
             lang,
             profileId: user.id,

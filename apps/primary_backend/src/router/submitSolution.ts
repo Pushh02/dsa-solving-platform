@@ -2,12 +2,14 @@ import { Request, Response, Router } from "express";
 import { SQS } from "@aws-sdk/client-sqs";
 
 import { db } from "../db";
-import { addJobToQueue } from "../queues/runQueue";
+import axios from "axios";
+import { getProblem } from "../lib/problem";
 
 const router = Router();
 
 router.post("/run", async (req: Request, res: Response) => {
-  const { lang, code, problemId, profileId } = req.body;
+  const { lang, code, problemId, profileId, problemTitle } = req.body;
+  const JUDGE0_URI = process.env.JUDGE0_URI;
 
   if (code === undefined || lang === undefined)
     return res
@@ -15,10 +17,19 @@ router.post("/run", async (req: Request, res: Response) => {
       .json({ success: false, error: "lang or code not provided" });
 
   try {
-    const sqs = new SQS({
-      region: process.env.REGION,
-    });
+    const problem = await getProblem(problemTitle);
 
+    problem.fullBoilerPlate = problem.fullBoilerPlate.replace("//##USERS_CODE_HERE", code);
+
+    const response = await axios.post(`${JUDGE0_URI}/submissions/batch`, {
+      submissions: problem.inputs.map((input, index) => ({
+        language_id: 52, // hardcoded for c++
+        source_code: problem.fullBoilerPlate
+          .replace("##INPUT_FILE_INDEX##", index.toString())
+          .replace("##OUTPUT_FILE_INDEX##", index.toString()),
+      })),
+    });
+    console.log(response); //debugging
     const submitSol = await db.runSubmission.create({
       data: {
         problemId,
@@ -28,12 +39,6 @@ router.post("/run", async (req: Request, res: Response) => {
         profileId,
       },
     });
-    await sqs.sendMessage({
-      QueueUrl: process.env.QUEUE_URL,
-      MessageBody: submitSol.id,
-      MessageGroupId: "run",
-      MessageDeduplicationId: submitSol.id,
-    });
 
     return res.send(submitSol.id);
   } catch (err) {
@@ -41,7 +46,7 @@ router.post("/run", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/submit", async(req: Request, res: Response) => {
+router.post("/submit", async (req: Request, res: Response) => {
   const { lang, code, problemId, profileId } = req.body;
 
   if (code === undefined || lang === undefined)
@@ -77,9 +82,9 @@ router.post("/submit", async(req: Request, res: Response) => {
 });
 
 router.post("/check", async (req: Request, res: Response) => {
-  try{
+  try {
     const solutionId = req.body.solutionId;
-  
+
     const solution = await db.runSubmission.findFirst({
       where: {
         id: solutionId,
@@ -89,15 +94,15 @@ router.post("/check", async (req: Request, res: Response) => {
       },
     });
     res.json(solution);
-  } catch(err){
+  } catch (err) {
     res.json(err);
   }
 });
 
 router.post("/checksubmission", async (req: Request, res: Response) => {
-  try{
+  try {
     const solutionId = req.body.solutionId;
-  
+
     const solution = await db.submitSolution.findFirst({
       where: {
         id: solutionId,
@@ -107,7 +112,7 @@ router.post("/checksubmission", async (req: Request, res: Response) => {
       },
     });
     res.json(solution);
-  } catch(err){
+  } catch (err) {
     res.json(err);
   }
 });
