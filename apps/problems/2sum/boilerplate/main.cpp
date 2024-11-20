@@ -8,13 +8,13 @@ using namespace std;
 int main()
 {
     try{
-        ifstream inFile("/dev/problems/3sum/tests/inputs/##INPUT_FILE_INDEX##.txt");
+        ifstream inFile("/dev/problems/2sum/tests/inputs/##INPUT_FILE_INDEX##.txt");
         if (!inFile.is_open()){
             cerr << "Error: Failed to open file:" << endl;
             return 1;
         }
 
-        ifstream expectedFile("/dev/problems/3sum/tests/outputs/##OUTPUT_FILE_INDEX##.txt");
+        ifstream expectedFile("/dev/problems/2sum/tests/outputs/##OUTPUT_FILE_INDEX##.txt");
         if (!expectedFile.is_open()){
             cerr << "Error: Failed to open expected file:" << endl;
             return 1;
@@ -56,8 +56,11 @@ int main()
         expectedOutput.erase(remove_if(expectedOutput.begin(), expectedOutput.end(), ::isspace), expectedOutput.end());
 
         if(actualOutput == expectedOutput){
+            cout<<"yay!";
             return 0;
         } else {
+            cout<<inFile.get();
+            cout<<"hello";
             return 1;
         }
     } catch (...){

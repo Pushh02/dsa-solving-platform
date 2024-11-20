@@ -28,6 +28,7 @@ router.post("/run", async (req: Request, res: Response) => {
           .replace("##INPUT_FILE_INDEX##", index.toString())
           .replace("##OUTPUT_FILE_INDEX##", index.toString()),
       })),
+      cpu_time_limit: 10,
     });
     console.log(response); //debugging
     const submitSol = await db.runSubmission.create({
