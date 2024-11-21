@@ -18,6 +18,8 @@ router.post("/run", async (req: Request, res: Response) => {
 
   try {
     const problem = await getProblem(problemTitle);
+    if(!problem)
+      return res.status(500).json({message: "Internal server error"})
 
     problem.fullBoilerPlate = problem.fullBoilerPlate.replace("//##USERS_CODE_HERE", code);
 

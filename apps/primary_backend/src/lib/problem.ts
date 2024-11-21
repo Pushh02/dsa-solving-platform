@@ -8,16 +8,20 @@ interface Problem {
     outputs: string[],
 }
 
-export const getProblem = async (problemTitle: string): Promise<Problem> => {
-  const fullBoilerPlate = await getProblemsFullBoilerPlate(problemTitle);
-
-  const inputs = await getProblemsInputs(problemTitle)
-  const outputs = await getProblemsOutputs(problemTitle)
-
-  return {
-    fullBoilerPlate,
-    inputs,
-    outputs
+export const getProblem = async (problemTitle: string): Promise<Problem | void> => {
+  try{
+    const fullBoilerPlate = await getProblemsFullBoilerPlate(problemTitle);
+    
+    const inputs = await getProblemsInputs(problemTitle)
+    const outputs = await getProblemsOutputs(problemTitle)
+  
+    return {
+      fullBoilerPlate,
+      inputs,
+      outputs
+    }
+  } catch(err){
+    console.log(err)
   }
 };
 
