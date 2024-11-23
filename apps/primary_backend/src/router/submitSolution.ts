@@ -20,19 +20,22 @@ router.post("/run", async (req: Request, res: Response) => {
     const problem = await getProblem(problemTitle);
     if(!problem)
       return res.status(500).json({message: "Internal server error"})
-
     problem.fullBoilerPlate = problem.fullBoilerPlate.replace("//##USERS_CODE_HERE", code);
-
-    const response = await axios.post(`${JUDGE0_URI}/submissions/batch`, {
-      submissions: problem.inputs.map((input, index) => ({
-        language_id: 52, // hardcoded for c++
-        source_code: problem.fullBoilerPlate
-          .replace("##INPUT_FILE_INDEX##", index.toString())
-          .replace("##OUTPUT_FILE_INDEX##", index.toString()),
-      })),
-      cpu_time_limit: 10,
+    const submissions = problem.inputs.map((input, index) => ({
+      language_id: 52, // hardcoded for c++
+      source_code: btoa(problem.fullBoilerPlate
+        .replace("##INPUT_FILE_INDEX##", index.toString())
+        .replace("##OUTPUT_FILE_INDEX##", index.toString())),
+    }));
+    const response = await axios.post(`${JUDGE0_URI}/submissions/batch?base64_encoded=true`, {
+      submissions
     });
-    console.log(response); //debugging
+    console.log(response.data)
+
+    setTimeout(async()=>{
+      const res2 = await axios.get(`http://43.204.109.153:2358/submissions/${response.data[0].token}?base64_encoded=true`)
+      console.log(res2.data)
+    }, 10000)
     const submitSol = await db.runSubmission.create({
       data: {
         problemId,

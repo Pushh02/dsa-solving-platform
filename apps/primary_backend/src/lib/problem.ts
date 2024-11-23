@@ -1,4 +1,5 @@
 import fs from "fs";
+import path from "path"
 
 const MOUNT_PATH = process.env.MOUNT_PATH;
 
@@ -26,9 +27,13 @@ export const getProblem = async (problemTitle: string): Promise<Problem | void> 
 };
 
 const getProblemsFullBoilerPlate = (problemTitle: string): Promise<string> => {
+  if(!MOUNT_PATH)
+    return Promise.reject("no mount path")
+
+  const boilerplatePath = path.join(MOUNT_PATH, problemTitle, 'boilerplate', 'main.cpp');
   return new Promise((resolve, reject) => {
     fs.readFile(
-      `${MOUNT_PATH}/${problemTitle}/boilerplate/main.cpp`,
+      boilerplatePath,
       { encoding: "utf-8" },
       (err, data) => {
         if (err) reject(err);
@@ -39,9 +44,13 @@ const getProblemsFullBoilerPlate = (problemTitle: string): Promise<string> => {
 };
 
 const getProblemsInputs = (problemTitle: string): Promise<string[]> => {
+  if(!MOUNT_PATH)
+    return Promise.reject("no mount path")
+
+  const inputsPath = path.join(MOUNT_PATH, problemTitle, 'tests', 'inputs');
   return new Promise((resolve, reject) => {
     fs.readdir(
-      `${MOUNT_PATH}/${problemTitle}/tests/inputs`,
+      inputsPath,
       async (err, files) => {
         if (err) {
           console.log(err);
@@ -73,9 +82,13 @@ const getProblemsInputs = (problemTitle: string): Promise<string[]> => {
 };
 
 const getProblemsOutputs = (problemTitle: string): Promise<string[]> => {
+  if(!MOUNT_PATH)
+    return Promise.reject("no mount path")
+
+  const outputsPath = path.join(MOUNT_PATH, problemTitle, 'tests', 'outputs');
     return new Promise((resolve, reject) => {
       fs.readdir(
-        `${MOUNT_PATH}/${problemTitle}/tests/inputs`,
+        outputsPath,
         async (err, files) => {
           if (err) {
             console.log(err);
