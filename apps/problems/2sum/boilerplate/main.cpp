@@ -57,10 +57,22 @@ int main()
         expectedOutput.erase(remove_if(expectedOutput.begin(), expectedOutput.end(), ::isspace), expectedOutput.end());
 
         if(actualOutput == expectedOutput){
-            cout<<"yay!";
+            string s = "";
+            for(int i = 0; i < actualOutput.size(); i++){
+                s += actualOutput[i]+",";
+                if(i == actualOutput.size()-1)
+                    s += actualOutput[i];
+            }
+            cout<<"["<<s<<"]";
             return 0;
         } else {
-            cout<<actualOutput<<" "<<expectedOutput;
+            string s = "";
+            for(int i = 0; i < actualOutput.size(); i++){
+                s += actualOutput[i]+",";
+                if(i == actualOutput.size()-1)
+                    s += actualOutput[i];
+            }
+            cout<<"["<<s<<"]";
             return 1;
         }
     } catch (...){
