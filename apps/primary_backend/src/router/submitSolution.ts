@@ -32,10 +32,6 @@ router.post("/run", async (req: Request, res: Response) => {
     });
     console.log(response.data)
 
-    setTimeout(async()=>{
-      const res2 = await axios.get(`http://43.204.109.153:2358/submissions/${response.data[0].token}?base64_encoded=true`)
-      console.log(res2.data)
-    }, 10000)
     const submitSol = await db.runSubmission.create({
       data: {
         problemId,

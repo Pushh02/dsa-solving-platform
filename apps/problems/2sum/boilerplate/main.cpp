@@ -43,6 +43,7 @@ int main()
         // Create a Solution object and use the twoSum method
         Solution op;
         vector<int> output = op.twoSum(nums, target);
+        sort(output.begin(), output.end());
 
         ostringstream actualStream;
         for (int i = 0; i < output.size(); i++){
@@ -59,8 +60,7 @@ int main()
             cout<<"yay!";
             return 0;
         } else {
-            cout<<inFile.get();
-            cout<<"hello";
+            cout<<actualOutput<<" "<<expectedOutput;
             return 1;
         }
     } catch (...){
