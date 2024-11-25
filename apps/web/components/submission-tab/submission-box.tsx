@@ -80,7 +80,7 @@ const SubmissionBox = () => {
               <div className="space-y-2">
                 <p className="text-sm text-[#d1d1d1]">
                   <span className="font-medium">Input:</span>{" "}
-                  {parsedOutput.inputs.join(", ")}
+                  {/* {parsedOutput.inputs.join(", ")} */}
                 </p>
                 <p className="text-sm text-[#d1d1d1]">
                   <span className="font-medium">Expected Output:</span>{" "}

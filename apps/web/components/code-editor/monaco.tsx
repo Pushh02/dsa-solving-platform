@@ -72,11 +72,17 @@ const Monaco = () => {
             setTimeout(() => setRun(false), 2000);
             clearInterval(interval);
           } else if (solutionStatus.data.status === Status.Error) {
-            setOutput({ output: solutionStatus.data.output, status: Status.Error });
+            setOutput({
+              output: solutionStatus.data.output,
+              status: Status.Error,
+            });
             setTimeout(() => setRun(false), 2000);
             clearInterval(interval);
           } else if (solutionStatus.data.status === Status.Failed) {
-            setOutput({ output: solutionStatus.data.output, status: Status.Failed });
+            setOutput({
+              output: solutionStatus.data.output,
+              status: Status.Failed,
+            });
             setTimeout(() => setRun(false), 2000);
             clearInterval(interval);
           }
@@ -90,7 +96,7 @@ const Monaco = () => {
             clearInterval(interval);
           }
           count += 1;
-        }, 700);
+        }, 1000);
       }
       if (isSubmit === true) {
         if (user === null) return;
@@ -102,6 +108,7 @@ const Monaco = () => {
         axios
           .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/compile/submit`, {
             problemId: prob.id,
+            problemTitle: prob.title,
             code,
             lang,
             profileId: user.id,
@@ -121,16 +128,32 @@ const Monaco = () => {
               solutionId,
             }
           );
+          console.log(solutionStatus.data)
           if (solutionStatus.data.status === Status.Success) {
-            setSubmitionOutput(solutionStatus.data.output)
+            setSubmitionOutput({
+              ...solutionStatus.data.output,
+              status: solutionStatus.data.status,
+              code: solutionStatus.data.code,
+              executionTime: solutionStatus.data.time,
+            });
             setTimeout(() => setIsSubmit(false), 2000);
             clearInterval(interval);
           } else if (solutionStatus.data.status === Status.Error) {
-            setSubmitionOutput(solutionStatus.data.output)
+            setSubmitionOutput({
+              ...solutionStatus.data.output,
+              status: solutionStatus.data.status,
+              code: solutionStatus.data.code,
+              executionTime: solutionStatus.data.time,
+            });
             setTimeout(() => setIsSubmit(false), 2000);
             clearInterval(interval);
           } else if (solutionStatus.data.status === Status.Failed) {
-            setSubmitionOutput(solutionStatus.data.output)
+            setSubmitionOutput({
+              ...solutionStatus.data.output,
+              status: solutionStatus.data.status,
+              code: solutionStatus.data.code,
+              executionTime: solutionStatus.data.time,
+            });
             setTimeout(() => setIsSubmit(false), 2000);
             clearInterval(interval);
           }
