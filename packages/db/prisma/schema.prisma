@@ -76,16 +76,19 @@ model RunSubmission {
   problem   Problem @relation(fields: [problemId], references: [id])
   problemId String
 
+  time   Int?
+  memory Int?
+
   submittedAt DateTime  @default(now())
   startedAt   DateTime?
   completedAt DateTime?
 }
 
 model SubmitSolution {
-  id       String   @id @default(uuid())
+  id       String @id @default(uuid())
   language String
   code     String
-  status   Status   @default(Pending)
+  status   Status @default(Pending)
   output   Json
 
   profile   Profile @relation(fields: [profileId], references: [id])
@@ -94,11 +97,14 @@ model SubmitSolution {
   problem   Problem @relation(fields: [problemId], references: [id])
   problemId String
 
+  time   Int?
+  memory Int?
+
   submittedAt DateTime  @default(now())
   startedAt   DateTime?
   completedAt DateTime?
 }
 
-model Post{
+model Post {
   id String @id @default(uuid())
 }

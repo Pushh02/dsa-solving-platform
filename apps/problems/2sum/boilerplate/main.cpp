@@ -56,25 +56,16 @@ int main()
         actualOutput.erase(remove_if(actualOutput.begin(), actualOutput.end(), ::isspace), actualOutput.end());
         expectedOutput.erase(remove_if(expectedOutput.begin(), expectedOutput.end(), ::isspace), expectedOutput.end());
 
-        if(actualOutput == expectedOutput){
-            string s = "";
-            for(int i = 0; i < actualOutput.size(); i++){
-                s += actualOutput[i]+",";
-                if(i == actualOutput.size()-1)
-                    s += actualOutput[i];
+        string s = "";
+        for(int i = 0; i < actualOutput.size(); i++) {
+            s += actualOutput[i];
+            if(i < actualOutput.size()-1) {
+                s += ",";
             }
-            cout<<"["<<s<<"]";
-            return 0;
-        } else {
-            string s = "";
-            for(int i = 0; i < actualOutput.size(); i++){
-                s += actualOutput[i]+",";
-                if(i == actualOutput.size()-1)
-                    s += actualOutput[i];
-            }
-            cout<<"["<<s<<"]";
-            return 1;
         }
+        
+        cout << "[" << s << "]";
+        return (actualOutput == expectedOutput) ? 0 : 1;
     } catch (...){
         cerr << "An error occurred." << endl;
         return 1;

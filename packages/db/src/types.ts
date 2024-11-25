@@ -49,3 +49,17 @@ export type ProblemSchema = {
   codeHeaders: languageSelect;
   dryRunTestCases: TestCase[];
 };
+
+export type submissionSchema = {
+  stdout: string,
+  time: number,
+  memory: number,
+  stderr: string | null,
+  token: string,
+  compile_output: string,
+  message: string,
+  status: {
+      id: number,
+      description: string
+  }
+}

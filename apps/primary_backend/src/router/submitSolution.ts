@@ -5,6 +5,8 @@ import { db } from "../db";
 import axios from "axios";
 import { getProblem } from "../lib/problem";
 import { Status } from "@prisma/client";
+import { submissionSchema } from "@repo/db/src/types";
+import { base64ToString } from "../lib/base64ToString";
 
 const router = Router();
 
@@ -21,10 +23,12 @@ router.post("/run", async (req: Request, res: Response) => {
     const problem = await getProblem(problemTitle);
     if (!problem)
       return res.status(500).json({ message: "Internal server error" });
+      
     problem.fullBoilerPlate = problem.fullBoilerPlate.replace(
       "//##USERS_CODE_HERE",
       code
     );
+    
     const submissions = problem.inputs.map((input, index) => ({
       language_id: 52, // hardcoded for c++
       source_code: btoa(
@@ -33,92 +37,102 @@ router.post("/run", async (req: Request, res: Response) => {
           .replace("##OUTPUT_FILE_INDEX##", index.toString())
       ),
     }));
+    
     const response = await axios.post(
       `${JUDGE0_URI}/submissions/batch?base64_encoded=true`,
       {
         submissions,
       }
     );
-    console.log(response.data);
-    const tokens: JSON[] = response.data;
+    
+    const tokens: any[] = response.data;
+    console.log(tokens)
 
     const submitSol = await db.runSubmission.create({
       data: {
         problemId,
         language: lang,
         filepath: code,
+        startedAt: new Date(),
         output: [],
         profileId,
       },
     });
 
-    let tokensForUrl = "";
-    for (let i = 0; i < tokens.length; i++) {
-      tokensForUrl += tokens[i] + ",";
-      if (i === tokens.length - 1) tokensForUrl += tokens[i];
-    }
-
-    //resolving the tokens
+    let tokensForUrl = tokens.map((token: any) => token.token).join(",");
+    console.log(tokensForUrl)
 
     let outputArray: string[] = [];
-    const interval = setInterval(async () => {
-      try {
+    let timeArray: number[] = [];  // Initialize arrays
+    let memoryArray: number[] = [];
+    let allResolved = true;
+    let count = 0, isSuccessfull = true;
+
+    const interval = setInterval(async()=>{
+      try{
         const submissionsResponse = await axios.get(
-          `http://${JUDGE0_URI}/submissions/batch?tokens=${tokensForUrl}&base64_encoded=true`
+          `${JUDGE0_URI}/submissions/batch?tokens=${tokensForUrl}&base64_encoded=true`
         );
-        const submissionsOutput = submissionsResponse.data;
+        const submissionsOutput = submissionsResponse.data.submissions as submissionSchema[];
+        console.log(submissionsOutput)
+        for(let i = 0; i < submissionsOutput.length; i++){
+          if(submissionsOutput[i].status.id === 1 || submissionsOutput[i].status.id === 2){
+            break;
+          }
+          else if(submissionsOutput[i].status.id === 3 || submissionsOutput[i].status.id === 4){
+            const decodedOp = base64ToString(submissionsOutput[i].stdout);
+            console.log(decodedOp)
+            outputArray.push(decodedOp);
+            isSuccessfull = submissionsOutput[i].status.id === 4 ? false : true;
 
-        // Filter and decode results
-        let allResolved = true;
-        let count = 0, isSuccessfull = true;
-
-        //@ts-ignore
-        submissionsOutput.submissions.forEach((submission: any, index) => {
-          if (outputArray.length <= index) {
-            if (submission.status.description !== "Processing") {
-              let bufferObj = Buffer.from(submission.stdout || "", "base64");
-              let decodedOutput = bufferObj.toString("utf8");
-              outputArray[index] = decodedOutput; // Save to the correct index
-
-              if(submission.status.description !== "Accepted"){
-                isSuccessfull = false
-              }
-            } else {
-              allResolved = false; // If any submission is still processing
-              count++
+            if(i === submissionsOutput.length-1){
+              await db.runSubmission.update({
+                where: { id: submitSol.id },
+                data: {
+                  status: isSuccessfull ? Status.Success : Status.Failed,
+                  output: outputArray,
+                  completedAt: new Date()
+                }
+              });
+              clearInterval(interval);
+              break;
             }
           }
-        });
-
-        if(count >= 6){
-          clearInterval(interval)
-          outputArray.push("unexpected error occured")
+          else if(submissionsOutput[i].status.id === 5){
+            await db.runSubmission.update({
+              where: { id: submitSol.id },
+              data: {
+                status: Status.Error,
+                output: [base64ToString(submissionsOutput[i].status.description)],
+                completedAt: new Date()
+              }
+            });
+            clearInterval(interval);
+            break;
+          }
+          else if(submissionsOutput[i].status.id > 5){
+            await db.runSubmission.update({
+              where: { id: submitSol.id },
+              data: {
+                status: Status.Error,
+                output: [base64ToString(submissionsOutput[i].compile_output)],
+                completedAt: new Date()
+              }
+            })
+            clearInterval(interval);
+            break;
+          }
         }
-
-        // If all submissions are resolved, clear the interval
-        if (allResolved) {
-          clearInterval(interval);
-          const updateOutput = await db.runSubmission.update({
-            where:{
-              id: submitSol.id
-            },
-            data: {
-              status: isSuccessfull ? Status.Success : Status.Failed,
-              output: outputArray,
-              completedAt: new Date()
-            }
-          })
-          console.log("All outputs resolved:", outputArray);
-        }
-      } catch (error) {
-        console.error("Error resolving tokens:", error);
-        clearInterval(interval); // Stop polling in case of error
+      } catch (err) {
+        console.log(err);
       }
-    }, 1000);
+    }, 1000)
 
     return res.send(submitSol.id);
+
   } catch (err) {
-    res.json(err);
+    console.error(err);
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 

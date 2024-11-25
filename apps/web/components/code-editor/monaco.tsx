@@ -76,7 +76,7 @@ const Monaco = () => {
             setTimeout(() => setRun(false), 2000);
             clearInterval(interval);
           } else if (solutionStatus.data.status === Status.Failed) {
-            setOutput({ output: solutionStatus.data.output, status: Status.Error });
+            setOutput({ output: solutionStatus.data.output, status: Status.Failed });
             setTimeout(() => setRun(false), 2000);
             clearInterval(interval);
           }
