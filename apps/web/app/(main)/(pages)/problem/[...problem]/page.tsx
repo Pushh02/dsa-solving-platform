@@ -15,6 +15,7 @@ export default function Home() {
   const [isOpen, setIsOpen] = useState(true);
   useEffect(() => {
     setIsOpen(true);
+    console.log(submissionOutput)
   }, [submissionOutput]);
   return (
     <div className="h-screen w-screen overflow-hidden">
@@ -32,13 +33,13 @@ export default function Home() {
         {isOpen && submissionOutput ? (
           <div className="relative">
             <SubmissionBox />
-            <Plus
-              onClick={() => {
-                setIsOpen(false);
-                setSubmissionOutput("");
-              }}
-              className="h-8 w-8 absolute top-6 right-12 rotate-45"
-            />
+              <Plus
+                onClick={() => {
+                  setIsOpen(false);
+                  setSubmissionOutput("");
+                }}
+                className="h-8 w-8 absolute top-6 right-12 rotate-45"
+              />
           </div>
         ) : null}
       </div>

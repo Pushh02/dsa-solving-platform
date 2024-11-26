@@ -22,7 +22,7 @@ const Monaco = () => {
   const [isSubmit, setIsSubmit] = useRecoilState(submitCode);
   const lang = useRecoilValue(language);
   const setOutput = useSetRecoilState(output);
-  const setSubmitionOutput = useSetRecoilState(submitOutput);
+  const setSubmissionOutput = useSetRecoilState(submitOutput);
   const prob = useRecoilValue(currentProblem);
 
   const { isSignedIn, user } = useUser();
@@ -102,7 +102,7 @@ const Monaco = () => {
         if (user === null) return;
 
         const code = showValue();
-        setSubmitionOutput(Status.Pending);
+        setSubmissionOutput(Status.Pending);
 
         let solutionId: string;
         axios
@@ -128,9 +128,8 @@ const Monaco = () => {
               solutionId,
             }
           );
-          console.log(solutionStatus.data)
           if (solutionStatus.data.status === Status.Success) {
-            setSubmitionOutput({
+            setSubmissionOutput({
               ...solutionStatus.data.output,
               status: solutionStatus.data.status,
               code: solutionStatus.data.code,
@@ -139,7 +138,7 @@ const Monaco = () => {
             setTimeout(() => setIsSubmit(false), 2000);
             clearInterval(interval);
           } else if (solutionStatus.data.status === Status.Error) {
-            setSubmitionOutput({
+            setSubmissionOutput({
               ...solutionStatus.data.output,
               status: solutionStatus.data.status,
               code: solutionStatus.data.code,
@@ -148,7 +147,7 @@ const Monaco = () => {
             setTimeout(() => setIsSubmit(false), 2000);
             clearInterval(interval);
           } else if (solutionStatus.data.status === Status.Failed) {
-            setSubmitionOutput({
+            setSubmissionOutput({
               ...solutionStatus.data.output,
               status: solutionStatus.data.status,
               code: solutionStatus.data.code,
@@ -159,15 +158,19 @@ const Monaco = () => {
           }
 
           if (count >= 9) {
-            setOutput({
-              output: ["Time Limit Exceeded - Too slow lil bro"],
+            setSubmissionOutput({
+              output: "Time Limit Exceeded - Too slow lil bro",
               status: Status.Error,
+              executionTime: 0,
+              inputs: "",
+              expectedOutput: "",
+              code: code
             });
             setTimeout(() => setIsSubmit(false), 2000);
             clearInterval(interval);
           }
           count += 1;
-        }, 700);
+        }, 1000);
       }
     }
   }, [run, isSubmit]);

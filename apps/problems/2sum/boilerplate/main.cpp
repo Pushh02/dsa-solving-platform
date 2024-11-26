@@ -47,7 +47,10 @@ int main()
 
         ostringstream actualStream;
         for (int i = 0; i < output.size(); i++){
-            actualStream << output[i];
+            if(i == output.size() - 1)
+                actualStream << output[i];
+            else
+                actualStream << output[i] <<",";
         }
 
         string actualOutput = actualStream.str();
@@ -55,16 +58,8 @@ int main()
 
         actualOutput.erase(remove_if(actualOutput.begin(), actualOutput.end(), ::isspace), actualOutput.end());
         expectedOutput.erase(remove_if(expectedOutput.begin(), expectedOutput.end(), ::isspace), expectedOutput.end());
-
-        string s = "";
-        for(int i = 0; i < actualOutput.size(); i++) {
-            s += actualOutput[i];
-            if(i < actualOutput.size()-1) {
-                s += ",";
-            }
-        }
         
-        cout << "[" << s << "]";
+        cout << "[" << actualOutput <<"]";
         return (actualOutput == expectedOutput) ? 0 : 1;
     } catch (...){
         cerr << "An error occurred." << endl;
