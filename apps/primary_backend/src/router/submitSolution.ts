@@ -53,7 +53,6 @@ router.post("/run", async (req: Request, res: Response) => {
   
   router.post("/submit", async (req: Request, res: Response) => {
     const { lang, code, problemId, profileId, problemTitle } = req.body;
-    const JUDGE0_URI = process.env.JUDGE0_URI;
     
     const submitSol = await db.submitSolution.create({
       data: {

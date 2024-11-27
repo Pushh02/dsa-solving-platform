@@ -24,19 +24,19 @@ const Navbar = async({ bgColor }: NavbarProps) => {
             Problem
           </Link>
           <Link
-            href="/about"
+            href="/aboutus"
             className="relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:bg-customGreen after:w-0 after:transition-width after:duration-300 hover:after:w-full"
           >
             Guided List
           </Link>
           <Link
-            href="/services"
+            href="/aboutus"
             className="relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:bg-customGreen after:w-0 after:transition-width after:duration-300 hover:after:w-full"
           >
             About Us
           </Link>
           <Link
-            href="/contact"
+            href="https://github.com/Pushh02/dsa-solving-platform"
             className="relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:bg-customGreen after:w-0 after:transition-width after:duration-300 hover:after:w-full"
           >
             Contribute
