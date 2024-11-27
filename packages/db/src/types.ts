@@ -14,12 +14,13 @@ export interface DryRunTestCase {
 }
 
 export type submissionOutput = {
-inputs: string,
+input: string,
   expectedOutput: string,
   output: string,
   status: Status,
   code: string,
-  executionTime: number | null
+  executionTime: number,
+  memory: number
 }
 
 export type CurrentTab = "problem" | "solution" | "submission"

@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Status } from "@prisma/client";
 import { submissionOutput } from "@repo/db/types";
 import { currentProblem, submitOutput } from "@repo/store/submission";
-import { Check, Copy } from "lucide-react";
+import { Check, Copy, Loader, Loader2 } from "lucide-react";
 import { useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
 
@@ -29,6 +29,7 @@ const SubmissionBox = () => {
     }
     return submissionOutput;
   })();
+  console.log(parsedOutput.input)
 
   // Determine submission status
   const isSuccess = isPending
@@ -46,8 +47,8 @@ const SubmissionBox = () => {
     document.execCommand("copy");
     window.getSelection()?.removeAllRanges();
 
-    setIsCopied(true)
-    setTimeout(()=>setIsCopied(false), 2000)
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
   };
 
   return (
@@ -62,9 +63,21 @@ const SubmissionBox = () => {
               : "text-rose-400"
         )}
       >
-        {isPending ? "Pending..." : isSuccess ? "Successful! :D" : "Failed"}
+        {isPending ? (
+          <div className="flex items-center gap-x-1">
+            <Loader2 className="animate-spin text-white" /> Pending...
+          </div>
+        ) : isSuccess ? (
+          "Successful! :D"
+        ) : (
+          "Failed"
+        )}
+        {parsedOutput && (
+          <p className="text-[0.63rem] opacity-60">
+            time: {parsedOutput.executionTime}ms memory: {parsedOutput.memory}kb
+          </p>
+        )}
       </h2>
-
       <h2 className="text-2xl text-[#e2e2e2]">{problem.title}</h2>
       <p className="text-[#d1d1d1] text-sm mt-2 leading-7">
         {problem.description}
@@ -77,10 +90,10 @@ const SubmissionBox = () => {
               <h3 className="text-lg font-medium text-[#e2e2e2] mb-2">
                 Test Results
               </h3>
-              <div className="space-y-2">
+              <div className="space-y-2 font-mono">
                 <p className="text-sm text-[#d1d1d1]">
-                  <span className="font-medium">Input:</span>{" "}
-                  {/* {parsedOutput.inputs.join(", ")} */}
+                  <span className="font-medium break-words">Input:{" "}
+                  {parsedOutput.input}</span>
                 </p>
                 <p className="text-sm text-[#d1d1d1]">
                   <span className="font-medium">Expected Output:</span>{" "}
@@ -111,7 +124,11 @@ const SubmissionBox = () => {
               onClick={copyCode}
               className="absolute right-4 top-4 p-1 border-[1px] border-zinc-600 rounded-lg"
             >
-              {isCopied ? <Check className="h-4 w-4"/> : <Copy className="h-4 w-4"/>}
+              {isCopied ? (
+                <Check className="h-4 w-4" />
+              ) : (
+                <Copy className="h-4 w-4" />
+              )}
             </button>
             <pre
               id="code"

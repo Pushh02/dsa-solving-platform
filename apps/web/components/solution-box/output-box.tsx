@@ -15,7 +15,7 @@ const OutputBox = () => {
     expectedOutput: string;
     output: string | undefined;
   } | null>(null);
-  
+
   useEffect(() => {
     if (outputVal === Status.Pending) {
       setIsLoading(true);
@@ -37,7 +37,7 @@ const OutputBox = () => {
         if (typeof outputVal === "object" && "output" in outputVal) {
           outputForTestCase = outputVal.output[0];
           if (outputVal.output[0] === "") {
-            outputForTestCase = ("null");
+            outputForTestCase = "null";
           }
         } else if (typeof outputVal === "string") {
           outputForTestCase = outputVal;
@@ -63,7 +63,7 @@ const OutputBox = () => {
     if (typeof outputVal === "object" && "output" in outputVal) {
       output = outputVal.output[index];
       if (outputVal.output[index] === "") {
-        output = ("null");
+        output = "null";
       }
     } else if (typeof outputVal === "string") {
       output = index === 0 ? outputVal : undefined;
@@ -76,16 +76,22 @@ const OutputBox = () => {
   return (
     <>
       <h2 className="text-xl font-semibold m-2">Output:</h2>
-      <p
-        className={cn(
-          "text-md ml-2 mb-2 font-semibold",
-          typeof outputVal === "object" && outputVal.status === Status.Success
-            ? "text-emerald-400"
-            : "text-rose-400"
-        )}
-      >
-        {typeof outputVal === "object" && outputVal.status}
-      </p>
+      {typeof outputVal === "object" && (
+        <p
+          className={cn(
+            "text-md ml-2 mb-2 font-semibold",
+            typeof outputVal === "object" && outputVal.status === Status.Success
+              ? "text-emerald-400"
+              : "text-rose-400"
+          )}
+        >
+          {typeof outputVal === "object" && outputVal.status}
+          <p className="text-[0.6rem] opacity-60">
+            time: {typeof outputVal === "object" && outputVal.time}ms memory:{" "}
+            {typeof outputVal === "object" && outputVal.memory}kb
+          </p>
+        </p>
+      )}
       <div className="flex ml-2 gap-x-2 mb-2">
         {problem &&
         problem.dryRunTestCases &&

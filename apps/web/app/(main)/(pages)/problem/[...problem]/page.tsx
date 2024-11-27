@@ -15,7 +15,6 @@ export default function Home() {
   const [isOpen, setIsOpen] = useState(true);
   useEffect(() => {
     setIsOpen(true);
-    console.log(submissionOutput)
   }, [submissionOutput]);
   return (
     <div className="h-screen w-screen overflow-hidden">

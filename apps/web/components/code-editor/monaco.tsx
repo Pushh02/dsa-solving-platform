@@ -68,6 +68,8 @@ const Monaco = () => {
             setOutput({
               output: solutionStatus.data.output,
               status: Status.Success,
+              time: solutionStatus.data.time,
+              memory: solutionStatus.data.memory
             });
             setTimeout(() => setRun(false), 2000);
             clearInterval(interval);
@@ -75,6 +77,8 @@ const Monaco = () => {
             setOutput({
               output: solutionStatus.data.output,
               status: Status.Error,
+              time: 0,
+              memory: 0
             });
             setTimeout(() => setRun(false), 2000);
             clearInterval(interval);
@@ -82,6 +86,8 @@ const Monaco = () => {
             setOutput({
               output: solutionStatus.data.output,
               status: Status.Failed,
+              time: solutionStatus.data.time,
+              memory: solutionStatus.data.memory
             });
             setTimeout(() => setRun(false), 2000);
             clearInterval(interval);
@@ -91,6 +97,8 @@ const Monaco = () => {
             setOutput({
               output: ["Time Limit Exceeded - Too slow lil bro"],
               status: Status.Error,
+              time: 0,
+              memory: 0
             });
             setTimeout(() => setRun(false), 2000);
             clearInterval(interval);
@@ -134,6 +142,7 @@ const Monaco = () => {
               status: solutionStatus.data.status,
               code: solutionStatus.data.code,
               executionTime: solutionStatus.data.time,
+              memory: solutionStatus.data.memory
             });
             setTimeout(() => setIsSubmit(false), 2000);
             clearInterval(interval);
@@ -143,6 +152,7 @@ const Monaco = () => {
               status: solutionStatus.data.status,
               code: solutionStatus.data.code,
               executionTime: solutionStatus.data.time,
+              memory: solutionStatus.data.memory
             });
             setTimeout(() => setIsSubmit(false), 2000);
             clearInterval(interval);
@@ -152,19 +162,21 @@ const Monaco = () => {
               status: solutionStatus.data.status,
               code: solutionStatus.data.code,
               executionTime: solutionStatus.data.time,
+              memory: solutionStatus.data.memory
             });
             setTimeout(() => setIsSubmit(false), 2000);
             clearInterval(interval);
           }
 
-          if (count >= 9) {
+          if (count >= 15) {
             setSubmissionOutput({
               output: "Time Limit Exceeded - Too slow lil bro",
               status: Status.Error,
               executionTime: 0,
-              inputs: "",
+              input: "",
               expectedOutput: "",
-              code: code
+              code: code,
+              memory: 0
             });
             setTimeout(() => setIsSubmit(false), 2000);
             clearInterval(interval);

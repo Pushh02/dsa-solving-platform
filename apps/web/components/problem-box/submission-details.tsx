@@ -24,7 +24,15 @@ const SubmissionDetails = ({ submission }: SubmissionDetailsProps) => {
   })();
   return (
     <div
-      onClick={() => setSubmissionValue(output)}
+      onClick={() =>
+        setSubmissionValue({
+          ...output,
+          status: submission.status,
+          executionTime: submission.time || 0,
+          memory: submission.memory || 0,
+          code: submission.code
+        })
+      }
       className="w-[95%] h-16 grid grid-cols-3 bg-zinc-800 hover:bg-zinc-700/70 transition-all rounded-md cursor-default mx-auto mb-2 p-2"
     >
       <div>
@@ -50,7 +58,9 @@ const SubmissionDetails = ({ submission }: SubmissionDetailsProps) => {
       </div>
       <div>
         <p className="">Execution time</p>
-        <p className="text-xs mt-1">{parsedOutput.executionTime?.toFixed(0)}ms</p>
+        <p className="text-xs mt-1">
+          {submission.time}ms
+        </p>
       </div>
     </div>
   );

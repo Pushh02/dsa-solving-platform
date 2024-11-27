@@ -5,6 +5,8 @@ import { atom } from "recoil";
 interface OutputInterface {
   output: string[];
   status: Status;
+  time: number;
+  memory: number;
 }
 
 export const runCode = atom({
