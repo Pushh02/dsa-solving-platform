@@ -57,6 +57,8 @@ model Problem {
   defaultCode  Json
   codeHeaders  Json
 
+  solution Json?
+
   dryRunTestCases Json[]
   submitTestCases Json[]
 

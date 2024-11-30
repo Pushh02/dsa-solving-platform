@@ -9,6 +9,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import ProblemHeader from "./problem-header";
 import ProblemTab from "./problem-tab";
 import SubmissionTab from "./submission-tab";
+import SolutionTab from "./solution-tab";
 
 const ProblemBox = () => {
   const [problemData, setproblemData] = useState<ProblemSchema>();
@@ -39,6 +40,7 @@ const ProblemBox = () => {
         router.replace("/");
         console.log(err);
       });
+      console.log(crntTab)
   }, []);
 
   // if(!problem)
@@ -51,7 +53,9 @@ const ProblemBox = () => {
         <ProblemTab problemData={problemData} />
       ) : crntTab === "submission" ? (
         <SubmissionTab />
-      ) : null}
+      ) : crntTab === "solution" ? (
+        <SolutionTab solution={problemData?.solution || null} />
+      ): null}
     </div>
   );
 };

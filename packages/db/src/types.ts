@@ -45,6 +45,7 @@ export type ProblemSchema = {
   examples: examples[];
   constraints: string[];
   followUpQuestion: string | null;
+  solution: solutionSchema;
   mainFunction: languageSelect;
   defaultCode: languageSelect;
   codeHeaders: languageSelect;
@@ -63,4 +64,10 @@ export type submissionSchema = {
       id: number,
       description: string
   }
+}
+
+export type solutionSchema = {
+  explaination: string,
+  code: string
+  videoLink: string,
 }
