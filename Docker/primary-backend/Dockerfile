@@ -12,7 +12,12 @@ COPY package.json /usr/src/app/package.json
 COPY package-lock.json /usr/src/app/package-lock.json
 COPY turbo.json /usr/src/app/turbo.json
 
+# Generate prisma
+RUN cd packages/db && npm install prisma @prisma/client
+RUN cd packages/db && npx prisma generate
+
 # Install dependencies
+WORKDIR /usr/src/app
 RUN npm install
 
 # Expose ports for the application
