@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Status {
+  Success
+  Pending
+  Error
+  Failed
+}
+
+enum Difficulty {
+  Easy
+  Medium
+  Hard
+}
+
+model Profile {
+  id       String @id @default(uuid())
+  name     String
+  username String
+  imageURL String @db.Text
+  email    String @db.Text
+
+  runSubmissions RunSubmission[]
+  submitSolution SubmitSolution[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Problem {
+  id               String     @id @default(uuid())
+  title            String
+  description      String
+  difficulty       Difficulty
+  examples         Json[]
+  constraints      String[]
+  followUpQuestion String?
+  topics           String[]
+
+  runSubmissions RunSubmission[]
+  submitSolution SubmitSolution[]
+
+  mainFunction Json
+  defaultCode  Json
+  codeHeaders  Json
+
+  solution Json?
+
+  dryRunTestCases Json[]
+  submitTestCases Json[]
+
+  @@index([title, difficulty])
+}
+
+model RunSubmission {
+  id       String   @id @default(uuid())
+  language String
+  filepath String
+  status   Status   @default(Pending)
+  output   String[]
+
+  profile   Profile @relation(fields: [profileId], references: [id])
+  profileId String
+
+  problem   Problem @relation(fields: [problemId], references: [id])
+  problemId String
+
+  time   Int?
+  memory Int?
+
+  submittedAt DateTime  @default(now())
+  startedAt   DateTime?
+  completedAt DateTime?
+}
+
+model SubmitSolution {
+  id       String @id @default(uuid())
+  language String
+  code     String
+  status   Status @default(Pending)
+  output   Json
+
+  profile   Profile @relation(fields: [profileId], references: [id])
+  profileId String
+
+  problem   Problem @relation(fields: [problemId], references: [id])
+  problemId String
+
+  time   Int?
+  memory Int?
+
+  submittedAt DateTime  @default(now())
+  startedAt   DateTime?
+  completedAt DateTime?
+}
+
+model Post {
+  id String @id @default(uuid())
+}
