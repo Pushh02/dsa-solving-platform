@@ -1,7 +1,0 @@
--- AlterTable
-ALTER TABLE "RunSubmission" ALTER COLUMN "time" DROP NOT NULL,
-ALTER COLUMN "memory" DROP NOT NULL;
-
--- AlterTable
-ALTER TABLE "SubmitSolution" ALTER COLUMN "time" DROP NOT NULL,
-ALTER COLUMN "memory" DROP NOT NULL;
